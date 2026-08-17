@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Panel - PINAKI</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h2>Admin Management Dashboard</h2>
+    <hr style="margin: 1rem 0;">
+
+    <!-- Backup & Restore System -->
+    <div style="background: white; padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem;">
+      <h3>Database Backup & Restore System</h3>
+      <br>
+      <button class="btn-main" id="backup-btn">Download Full JSON Backup</button>
+      <input type="file" id="restore-file" accept=".json" style="margin-left: 1rem;">
+      <button class="btn-main" id="restore-btn" style="background: #059669;">Restore Data</button>
+    </div>
+
+    <!-- Live Orders Section -->
+    <div style="background: white; padding: 1.5rem; border-radius: 8px;">
+      <h3>All Customer Orders</h3>
+      <div id="all-orders" style="margin-top: 1rem;">Loading...</div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { auth, db } from './firebase-config.js';
+    import { collection, getDocs, setDoc, doc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    // Download Backup
+    document.getElementById('backup-btn').addEventListener('click', async () => {
+      const ordersSnap = await getDocs(collection(db, "orders"));
+      const usersSnap = await getDocs(collection(db, "users"));
+      
+      const backupData = {
+        orders: ordersSnap.docs.map(d => ({ id: d.id, ...d.data() })),
+        users: usersSnap.docs.map(d => ({ id: d.id, ...d.data() }))
+      };
+
+      const blob = new Blob([JSON.stringify(backupData, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `pinaki_backup_${Date.now()}.json`;
+      a.click();
+    });
+
+    // Restore Backup
+    document.getElementById('restore-btn').addEventListener('click', () => {
+      const fileInput = document.getElementById('restore-file');
+      if (!fileInput.files[0]) {
+        alert("Please select a backup JSON file first.");
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = async (e) => {
+        const data = JSON.parse(e.target.result);
+        
+        if (data.orders) {
+          for (let order of data.orders) {
+            await setDoc(doc(db, "orders", order.id), order);
+          }
+        }
+        alert("Database successfully restored!");
+        location.reload();
+      };
+      reader.readAsText(fileInput.files[0]);
+    });
+  </script>
+</body>
+</html>
