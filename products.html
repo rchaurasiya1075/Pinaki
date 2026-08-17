@@ -3,126 +3,76 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>All Products - PINAKI</title>
-  
+  <title>Shop - PINAKI</title>
   <style>
-    :root {
-      --primary: #d97706;
-      --primary-hover: #b45309;
-      --bg-color: #f8fafc;
-      --card-bg: #ffffff;
-      --text-main: #1e293b;
-      --text-muted: #64748b;
-      --border-color: #e2e8f0;
-    }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-    body { background-color: var(--bg-color); color: var(--text-main); display: flex; flex-direction: column; min-height: 100vh; }
-
-    header { background: #ffffff; border-bottom: 1px solid var(--border-color); padding: 1rem 2rem; position: sticky; top: 0; z-index: 100; }
-    .navbar { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
-    .logo { font-size: 1.6rem; font-weight: 800; color: var(--primary); text-decoration: none; }
-    .nav-links { display: flex; align-items: center; gap: 1.2rem; }
-    .nav-links a { text-decoration: none; color: var(--text-main); font-weight: 600; }
-    .nav-links a:hover { color: var(--primary); }
-
-    .container { max-width: 1200px; margin: 2.5rem auto; padding: 0 1.5rem; flex: 1; width: 100%; }
-    .page-title { font-size: 1.8rem; font-weight: 800; margin-bottom: 1.5rem; border-left: 5px solid var(--primary); padding-left: 0.8rem; }
-
-    .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1.8rem; }
-    .product-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; }
-    .product-img { width: 100%; height: 200px; object-fit: cover; background: #f1f5f9; }
-    .product-info { padding: 1.2rem; display: flex; flex-direction: column; flex: 1; }
-    .product-title { font-size: 1.05rem; font-weight: 700; margin-bottom: 0.5rem; }
-    .product-price { font-size: 1.2rem; font-weight: 800; color: var(--primary); margin-bottom: 1rem; }
-    .btn-add-cart { margin-top: auto; width: 100%; padding: 0.65rem; background: var(--primary); color: white; border: none; border-radius: 6px; font-weight: 700; cursor: pointer; }
-    .btn-add-cart:hover { background: var(--primary-hover); }
-
-    footer { background: #ffffff; border-top: 1px solid var(--border-color); text-align: center; padding: 1.5rem; margin-top: 3rem; color: var(--text-muted); }
+    :root { var(--primary): #d97706; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
+    body { background: #f8fafc; color: #1e293b; }
+    header { background: white; padding: 1rem 2rem; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; }
+    .logo { font-size: 1.5rem; font-weight: bold; color: #d97706; text-decoration: none; }
+    .container { max-width: 1200px; margin: 2rem auto; padding: 0 1rem; }
+    
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 1.5rem; }
+    .card { background: white; border-radius: 8px; border: 1px solid #e2e8f0; overflow: hidden; display: flex; flex-direction: column; }
+    .card img { width: 100%; height: 200px; object-fit: cover; }
+    .info { padding: 1rem; display: flex; flex-direction: column; flex: 1; }
+    .price { font-size: 1.2rem; font-weight: bold; color: #d97706; margin: 0.5rem 0; }
+    .mrp { text-decoration: line-through; color: #94a3b8; font-size: 0.9rem; }
+    .off { color: #16a34a; font-size: 0.85rem; font-weight: bold; margin-left: 0.3rem; }
+    .btn-cart { width: 100%; padding: 0.6rem; background: #d97706; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: auto; }
   </style>
 </head>
 <body>
 
   <header>
-    <nav class="navbar">
-      <a href="index.html" class="logo">PINAKI</a>
-      <div class="nav-links">
-        <a href="index.html">Home</a>
-        <a href="products.html">Products</a>
-        <a href="cart.html">🛒 Cart (<span id="cart-count">0</span>)</a>
-        <a href="auth.html" id="nav-login-btn">Login / Signup</a>
-        <a href="user-panel.html" id="nav-user-panel" style="display: none;">My Orders</a>
-        <a href="admin-panel.html" id="nav-admin-panel" style="display: none;">Admin Panel</a>
-      </div>
-    </nav>
+    <a href="index.html" class="logo">PINAKI</a>
+    <a href="cart.html" style="text-decoration: none; font-weight: bold; color: #1e293b;">🛒 Cart (<span id="cart-cnt">0</span>)</a>
   </header>
 
   <main class="container">
-    <h1 class="page-title">Explore All Products</h1>
-    <div class="products-grid" id="products-container">
-      <p style="grid-column: 1/-1; text-align: center;">Loading products...</p>
-    </div>
+    <h2>All Products</h2>
+    <br>
+    <div class="grid" id="customer-grid">Loading...</div>
   </main>
 
-  <footer>
-    <p>&copy; 2026 PINAKI Store. All Rights Reserved.</p>
-  </footer>
-
   <script type="module">
-    import { db, auth } from './firebase-config.js';
+    import { db } from './firebase-config.js';
     import { collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        document.getElementById('nav-login-btn').style.display = 'none';
-        document.getElementById('nav-user-panel').style.display = 'inline-block';
-      }
-    });
+    async function displayProducts() {
+      const grid = document.getElementById('customer-grid');
+      const snap = await getDocs(collection(db, "products"));
+      grid.innerHTML = '';
+      
+      snap.forEach(docSnap => {
+        const item = docSnap.data();
+        const discount = item.mrp ? Math.round(((item.mrp - item.price) / item.mrp) * 100) : 0;
 
-    async function loadProducts() {
-      const container = document.getElementById('products-container');
-      try {
-        const querySnapshot = await getDocs(collection(db, "products"));
-        if (querySnapshot.empty) {
-          container.innerHTML = `<p style="grid-column: 1/-1; text-align: center;">Abhi koi products nahi hain.</p>`;
-          return;
-        }
-        container.innerHTML = '';
-        querySnapshot.forEach((docSnap) => {
-          const item = docSnap.data();
-          const pId = docSnap.id;
-          const card = document.createElement('div');
-          card.className = 'product-card';
-          card.innerHTML = `
-            <img src="${item.imageUrl || 'https://via.placeholder.com/200'}" class="product-img">
-            <div class="product-info">
-              <h3 class="product-title">${item.title}</h3>
-              <div class="product-price">₹${item.price}</div>
-              <button class="btn-add-cart" onclick="addToCart('${pId}', '${item.title}', ${item.price}, '${item.imageUrl || ''}')">Add to Cart</button>
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+          <img src="${item.imageUrl}">
+          <div class="info">
+            <h3>${item.title}</h3>
+            <p style="font-size: 0.85rem; color: #64748b; margin: 0.3rem 0;">${item.description || ''}</p>
+            <div class="price">
+              ₹${item.price} <span class="mrp">₹${item.mrp || ''}</span> <span class="off">${discount}% OFF</span>
             </div>
-          `;
-          container.appendChild(card);
-        });
-      } catch (err) {
-        container.innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: red;">Error: ${err.message}</p>`;
-      }
+            <button class="btn-cart" onclick="addToCart('${docSnap.id}', '${item.title}', ${item.price}, '${item.imageUrl}')">Add to Cart</button>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
     }
 
-    loadProducts();
-
-    function updateCartCount() {
-      const cart = JSON.parse(localStorage.getItem('pinaki_cart')) || [];
-      document.getElementById('cart-count').innerText = cart.length;
-    }
-    updateCartCount();
+    displayProducts();
 
     window.addToCart = function(id, title, price, imageUrl) {
       let cart = JSON.parse(localStorage.getItem('pinaki_cart')) || [];
-      cart.push({ id, title, price, imageUrl, quantity: 1 });
+      cart.push({ id, title, price, imageUrl });
       localStorage.setItem('pinaki_cart', JSON.stringify(cart));
-      updateCartCount();
-      alert(`${title} cart me add kar diya gaya hai!`);
+      document.getElementById('cart-cnt').innerText = cart.length;
+      alert(`${title} cart me add ho gaya!`);
     };
   </script>
 </body>
