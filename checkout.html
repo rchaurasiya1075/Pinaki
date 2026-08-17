@@ -1,39 +1,115 @@
-<!-- Include Razorpay SDK -->
-<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout - PINAKI</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
 
-<script type="module">
-  import { db, auth } from './firebase-config.js';
-  import { collection, addDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+  <header>
+    <nav class="navbar">
+      <a href="index.html" class="logo">PINAKI</a>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="cart.html" class="cart-btn">🛒 Cart</a>
+      </div>
+    </nav>
+  </header>
 
-  function payOnline(amount, orderDetails) {
-    var options = {
-      "key": "YOUR_RAZORPAY_KEY_ID", // Enter Key ID generated from Razorpay Dashboard
-      "amount": amount * 100, // Amount in paise
-      "currency": "INR",
-      "name": "PINAKI Foods",
-      "description": "Payment for Homemade Products",
-      "handler": async function (response) {
-        // Save Order to Firestore after successful payment
-        await addDoc(collection(db, "orders"), {
-          userId: auth.currentUser ? auth.currentUser.uid : "guest",
-          items: orderDetails.items,
-          totalAmount: amount,
-          paymentId: response.razorpay_payment_id,
-          paymentStatus: "SUCCESS",
-          status: "Processing",
+  <main class="container">
+    <div style="background: white; padding: 2rem; border-radius: 12px; max-width: 600px; margin: 0 auto; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
+      <h2 style="text-align: center; margin-bottom: 1.5rem;">Delivery & Payment</h2>
+      
+      <div class="form-group">
+        <label>Full Name</label>
+        <input type="text" id="cust-name" placeholder="Apna naam bharein" required>
+      </div>
+
+      <div class="form-group">
+        <label>Mobile Number</label>
+        <input type="tel" id="cust-phone" placeholder="Mobile number" required>
+      </div>
+
+      <div class="form-group">
+        <label>Full Delivery Address</label>
+        <textarea id="cust-address" placeholder="House no., Street, Pincode" required></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>Payment Mode</label>
+        <select id="payment-mode" style="width:100%; padding:0.8rem; border-radius:8px;">
+          <option value="COD">Cash on Delivery (COD)</option>
+          <option value="UPI/Online">Online Payment / UPI</option>
+        </select>
+      </div>
+
+      <button class="btn-main" id="place-order-btn" style="width: 100%; margin-top: 1rem;">Place Order Now</button>
+    </div>
+  </main>
+
+  <script type="module">
+    import { auth, db } from './firebase-config.js';
+    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { collection, addDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    let currentUser = null;
+
+    onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        alert("Order dene ke liye pehle login karein.");
+        window.location.href = "auth.html";
+      } else {
+        currentUser = user;
+      }
+    });
+
+    document.getElementById('place-order-btn').addEventListener('click', async () => {
+      const name = document.getElementById('cust-name').value;
+      const phone = document.getElementById('cust-phone').value;
+      const address = document.getElementById('cust-address').value;
+      const payMode = document.getElementById('payment-mode').value;
+      
+      let cart = JSON.parse(localStorage.getItem('pinaki_cart')) || [];
+
+      if (!name || !phone || !address) {
+        alert("Kripya saari delivery details bharein.");
+        return;
+      }
+
+      if (cart.length === 0) {
+        alert("Aapki cart khali hai!");
+        return;
+      }
+
+      const totalAmount = cart.reduce((sum, item) => sum + item.price, 0);
+
+      try {
+        // Firestore Database me Order Save
+        const docRef = await addDoc(collection(db, "orders"), {
+          userId: currentUser.uid,
+          userEmail: currentUser.email,
+          customerName: name,
+          phone: phone,
+          deliveryAddress: address,
+          items: cart,
+          totalAmount: totalAmount,
+          paymentMode: payMode,
+          paymentStatus: payMode === "COD" ? "Pending (COD)" : "Paid",
+          status: "Order Confirmed",
           timestamp: new Date().toISOString()
         });
 
-        alert("Payment Successful! Order ID Saved.");
+        // Cart Clear Karein
+        localStorage.removeItem('pinaki_cart');
+        alert("Aapka order successfully place ho gaya hai!");
         window.location.href = "user-panel.html";
-      },
-      "prefill": {
-        "name": orderDetails.customerName,
-        "contact": orderDetails.phone
-      },
-      "theme": { "color": "#d97706" }
-    };
-    var rzp1 = new Razorpay(options);
-    rzp1.open();
-  }
-</script>
+
+      } catch (error) {
+        alert("Order place karne me error aaya: " + error.message);
+      }
+    });
+  </script>
+</body>
+</html>
