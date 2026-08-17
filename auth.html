@@ -4,76 +4,434 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login / Signup - PINAKI</title>
-  <link rel="stylesheet" href="style.css">
+  
+  <style>
+    :root {
+      --primary: #d97706;
+      --primary-hover: #b45309;
+      --bg-color: #f8fafc;
+      --card-bg: #ffffff;
+      --text-main: #1e293b;
+      --text-muted: #64748b;
+      --border-color: #e2e8f0;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* Navbar Styling */
+    header {
+      background: #ffffff;
+      border-bottom: 1px solid var(--border-color);
+      padding: 1rem 2rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+
+    .navbar {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--primary);
+      text-decoration: none;
+      letter-spacing: 1px;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--text-main);
+      font-weight: 600;
+      margin-left: 1.5rem;
+      transition: color 0.2s ease;
+    }
+
+    .nav-links a:hover {
+      color: var(--primary);
+    }
+
+    /* Form Card Container */
+    .auth-wrapper {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1rem;
+    }
+
+    .auth-card {
+      background: var(--card-bg);
+      width: 100%;
+      max-width: 440px;
+      padding: 2.5rem 2rem;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+      border: 1px solid var(--border-color);
+    }
+
+    /* Tabs (Login vs Signup) */
+    .auth-tabs {
+      display: flex;
+      border-bottom: 2px solid var(--border-color);
+      margin-bottom: 2rem;
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 0.75rem;
+      background: none;
+      border: none;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-align: center;
+    }
+
+    .tab-btn.active {
+      color: var(--primary);
+      border-bottom: 3px solid var(--primary);
+      margin-bottom: -2px;
+    }
+
+    .auth-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      text-align: center;
+      color: var(--text-main);
+    }
+
+    /* Input Fields */
+    .form-group {
+      margin-bottom: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .form-group label {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .input-box {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .input-box input {
+      width: 100%;
+      padding: 0.8rem 1rem;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .input-box input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.15);
+    }
+
+    /* Toggle Password Button */
+    .toggle-pwd {
+      position: absolute;
+      right: 12px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    /* Secret Key Section */
+    .admin-box {
+      background: #fef3c7;
+      border: 1px dashed var(--primary);
+      padding: 1rem;
+      border-radius: 8px;
+      margin-top: 0.5rem;
+    }
+
+    .admin-box label {
+      color: #92400e;
+    }
+
+    /* Submit Button */
+    .btn-submit {
+      width: 100%;
+      padding: 0.85rem;
+      background-color: var(--primary);
+      color: #ffffff;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 1rem;
+      transition: background-color 0.2s ease, transform 0.1s ease;
+    }
+
+    .btn-submit:hover {
+      background-color: var(--primary-hover);
+    }
+
+    .btn-submit:active {
+      transform: scale(0.99);
+    }
+
+    /* Feedback Message Box */
+    #status-msg {
+      margin-top: 1.25rem;
+      font-size: 0.9rem;
+      text-align: center;
+      min-height: 1.2rem;
+      font-weight: 600;
+    }
+
+    .msg-error {
+      color: #dc2626;
+    }
+
+    .msg-success {
+      color: #16a34a;
+    }
+
+    .msg-info {
+      color: #2563eb;
+    }
+  </style>
 </head>
 <body>
-  <div class="container" style="max-width: 400px; margin-top: 5rem;">
-    <div style="background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
-      <h2 style="text-align: center; margin-bottom: 1.5rem;" id="form-title">Login to PINAKI</h2>
-      
-      <div class="form-group">
-        <label>Email Address</label>
-        <input type="email" id="email" placeholder="example@gmail.com" required>
+
+  <!-- Navbar -->
+  <header>
+    <nav class="navbar">
+      <a href="index.html" class="logo">PINAKI</a>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="products.html">Products</a>
+        <a href="cart.html">🛒 Cart</a>
       </div>
+    </nav>
+  </header>
+
+  <!-- Login/Signup Main Container -->
+  <main class="auth-wrapper">
+    <div class="auth-card">
       
-      <div class="form-group">
-        <label>Password</label>
-        <input type="password" id="password" placeholder="••••••••" required>
+      <!-- Toggle Tabs -->
+      <div class="auth-tabs">
+        <button id="tab-login" class="tab-btn active" type="button">Login</button>
+        <button id="tab-signup" class="tab-btn" type="button">Create Account</button>
       </div>
 
-      <button class="btn-main" style="width: 100%; margin-top: 1rem;" id="submit-btn">Login</button>
-      <p style="text-align: center; margin-top: 1rem; font-size: 0.9rem;">
-        <a href="#" id="toggle-auth">Account nahi hai? Sign Up karein</a>
-      </p>
+      <h2 id="form-heading" class="auth-title">User / Admin Login</h2>
+
+      <form id="auth-form" onsubmit="return false;">
+        
+        <!-- Email Input -->
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <div class="input-box">
+            <input type="email" id="email" placeholder="name@example.com" required autocomplete="email">
+          </div>
+        </div>
+
+        <!-- Password Input -->
+        <div class="form-group">
+          <label for="password">Password</label>
+          <div class="input-box">
+            <input type="password" id="password" placeholder="••••••••" required autocomplete="current-password">
+            <button type="button" class="toggle-pwd" id="pwd-toggle-btn">Show</button>
+          </div>
+        </div>
+
+        <!-- Optional Admin Key (Signup mode only) -->
+        <div class="form-group admin-box" id="admin-key-wrapper" style="display: none;">
+          <label for="admin-key">Admin Passcode (Optional)</label>
+          <p style="font-size: 0.75rem; color: #78350f; margin-bottom: 0.4rem;">
+            Agar aap Store Manager/Admin hain, toh secret key yahan daalein:
+          </p>
+          <div class="input-box">
+            <input type="password" id="admin-key" placeholder="Enter Admin Key (e.g. PINAKI123)">
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" id="submit-btn" class="btn-submit">Login Now</button>
+      </form>
+
+      <!-- Status Message Area -->
+      <div id="status-msg"></div>
+
     </div>
-  </div>
+  </main>
 
+  <!-- Firebase Script Integration -->
   <script type="module">
     import { auth, db } from './firebase-config.js';
-    import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-    import { doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { 
+      createUserWithEmailAndPassword, 
+      signInWithEmailAndPassword 
+    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { 
+      doc, 
+      setDoc, 
+      getDoc 
+    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-    let isSignup = false;
+    // App State Variable
+    let currentMode = 'login'; // 'login' ya 'signup'
 
-    document.getElementById('toggle-auth').addEventListener('click', (e) => {
-      e.preventDefault();
-      isSignup = !isSignup;
-      document.getElementById('form-title').innerText = isSignup ? "Create Account" : "Login to PINAKI";
-      document.getElementById('submit-btn').innerText = isSignup ? "Sign Up" : "Login";
-      document.getElementById('toggle-auth').innerText = isSignup ? "Account hai? Login karein" : "Account nahi hai? Sign Up karein";
+    // DOM Elements
+    const tabLogin = document.getElementById('tab-login');
+    const tabSignup = document.getElementById('tab-signup');
+    const formHeading = document.getElementById('form-heading');
+    const submitBtn = document.getElementById('submit-btn');
+    const adminKeyWrapper = document.getElementById('admin-key-wrapper');
+    const statusMsg = document.getElementById('status-msg');
+    const pwdInput = document.getElementById('password');
+    const pwdToggleBtn = document.getElementById('pwd-toggle-btn');
+    const authForm = document.getElementById('auth-form');
+
+    // Password Show/Hide Feature
+    pwdToggleBtn.addEventListener('click', () => {
+      if (pwdInput.type === 'password') {
+        pwdInput.type = 'text';
+        pwdToggleBtn.innerText = 'Hide';
+      } else {
+        pwdInput.type = 'password';
+        pwdToggleBtn.innerText = 'Show';
+      }
     });
 
-    document.getElementById('submit-btn').addEventListener('click', async () => {
-      const email = document.getElementById('email').value;
-      const password = document.getElementById('password').value;
+    // Tab Switch: Login
+    tabLogin.addEventListener('click', () => {
+      currentMode = 'login';
+      tabLogin.classList.add('active');
+      tabSignup.classList.remove('active');
+      formHeading.innerText = "User / Admin Login";
+      submitBtn.innerText = "Login Now";
+      adminKeyWrapper.style.display = 'none';
+      clearMsg();
+    });
+
+    // Tab Switch: Signup
+    tabSignup.addEventListener('click', () => {
+      currentMode = 'signup';
+      tabSignup.classList.add('active');
+      tabLogin.classList.remove('active');
+      formHeading.innerText = "Create New Account";
+      submitBtn.innerText = "Register Account";
+      adminKeyWrapper.style.display = 'block';
+      clearMsg();
+    });
+
+    function showMsg(text, type) {
+      statusMsg.className = type === 'error' ? 'msg-error' : (type === 'success' ? 'msg-success' : 'msg-info');
+      statusMsg.innerText = text;
+    }
+
+    function clearMsg() {
+      statusMsg.className = '';
+      statusMsg.innerText = '';
+    }
+
+    // Form Submit Handler
+    authForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const email = document.getElementById('email').value.trim();
+      const password = pwdInput.value.trim();
+      const adminKey = document.getElementById('admin-key').value.trim();
 
       if (!email || !password) {
-        alert("Kripya email aur password dono bharein.");
+        showMsg("Kripya email aur password dono daalein!", "error");
         return;
       }
 
+      submitBtn.disabled = true;
+      showMsg("Please wait, processing...", "info");
+
       try {
-        if (isSignup) {
+        if (currentMode === 'signup') {
+          // 1. Firebase Auth me User Nirdharit Karein
           const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-          await setDoc(doc(db, "users", userCredential.user.uid), {
+          const uid = userCredential.user.uid;
+
+          // 2. Passcode checking se Role assign Karein
+          let userRole = "user";
+          if (adminKey === "PINAKI123") { // Secrets change yahan se kar sakte hain
+            userRole = "admin";
+          }
+
+          // 3. Firestore me User Document Entry Karein
+          await setDoc(doc(db, "users", uid), {
             email: email,
-            role: "user",
+            role: userRole,
             createdAt: new Date().toISOString()
           });
-          alert("Account ban gaya!");
-          window.location.href = "user-panel.html";
-        } else {
-          const userCredential = await signInWithEmailAndPassword(auth, email, password);
-          const userDoc = await getDoc(doc(db, "users", userCredential.user.uid));
+
+          showMsg("Account ban gaya! Redirect kar rahe hain...", "success");
           
+          setTimeout(() => {
+            window.location.href = userRole === "admin" ? "admin-panel.html" : "user-panel.html";
+          }, 1200);
+
+        } else {
+          // 1. User/Admin Login Operation
+          const userCredential = await signInWithEmailAndPassword(auth, email, password);
+          const uid = userCredential.user.uid;
+
+          // 2. Role Check from Firestore
+          const userDoc = await getDoc(doc(db, "users", uid));
+
           if (userDoc.exists() && userDoc.data().role === "admin") {
-            window.location.href = "admin-panel.html";
+            showMsg("Welcome Admin! Redirecting...", "success");
+            setTimeout(() => window.location.href = "admin-panel.html", 1000);
           } else {
-            window.location.href = "user-panel.html";
+            showMsg("Login successful! Redirecting...", "success");
+            setTimeout(() => window.location.href = "user-panel.html", 1000);
           }
         }
       } catch (error) {
-        alert("Error: " + error.message);
+        submitBtn.disabled = false;
+        let errorMessage = error.message;
+
+        // Common Firebase Auth Errors User-Friendly Format
+        if (error.code === 'auth/invalid-credential' || error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
+          errorMessage = "Galat email ya password daala hai!";
+        } else if (error.code === 'auth/email-already-in-use') {
+          errorMessage = "Yeh email pehle se registered hai! Login karein.";
+        } else if (error.code === 'auth/weak-password') {
+          errorMessage = "Password kam se kam 6 aksar ka hona chahiye!";
+        }
+
+        showMsg(errorMessage, "error");
       }
     });
   </script>
