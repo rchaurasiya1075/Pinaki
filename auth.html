@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login / Signup - PINAKI</title>
   <link rel="stylesheet" href="style.css">
 </head>
@@ -22,7 +23,7 @@
 
       <button class="btn-main" style="width: 100%; margin-top: 1rem;" id="submit-btn">Login</button>
       <p style="text-align: center; margin-top: 1rem; font-size: 0.9rem;">
-        <a href="#" id="toggle-auth">Need an account? Sign Up</a>
+        <a href="#" id="toggle-auth">Account nahi hai? Sign Up karein</a>
       </p>
     </div>
   </div>
@@ -39,23 +40,27 @@
       isSignup = !isSignup;
       document.getElementById('form-title').innerText = isSignup ? "Create Account" : "Login to PINAKI";
       document.getElementById('submit-btn').innerText = isSignup ? "Sign Up" : "Login";
-      document.getElementById('toggle-auth').innerText = isSignup ? "Already have an account? Login" : "Need an account? Sign Up";
+      document.getElementById('toggle-auth').innerText = isSignup ? "Account hai? Login karein" : "Account nahi hai? Sign Up karein";
     });
 
     document.getElementById('submit-btn').addEventListener('click', async () => {
       const email = document.getElementById('email').value;
       const password = document.getElementById('password').value;
 
+      if (!email || !password) {
+        alert("Kripya email aur password dono bharein.");
+        return;
+      }
+
       try {
         if (isSignup) {
           const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-          // Default user role save
           await setDoc(doc(db, "users", userCredential.user.uid), {
             email: email,
             role: "user",
             createdAt: new Date().toISOString()
           });
-          alert("Account created successfully!");
+          alert("Account ban gaya!");
           window.location.href = "user-panel.html";
         } else {
           const userCredential = await signInWithEmailAndPassword(auth, email, password);
@@ -68,7 +73,7 @@
           }
         }
       } catch (error) {
-        alert("Authentication Error: " + error.message);
+        alert("Error: " + error.message);
       }
     });
   </script>
