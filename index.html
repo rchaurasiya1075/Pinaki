@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PINAKI - Pure Homemade Delights</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header>
+    <nav class="navbar">
+      <a href="index.html" class="logo">PINAKI</a>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="products.html">All Products</a>
+        <a href="cart.html" class="cart-btn">🛒 Cart (<span id="cart-count">0</span>)</a>
+      </div>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <h1>100% Pure Homemade Ghee, Achar & Oils</h1>
+    <p>Traditional family recipes prepared naturally with zero chemicals.</p>
+    <br>
+    <a href="products.html" class="btn-main">Explore Store</a>
+  </section>
+
+  <main class="container">
+    <h2 style="text-align: center;">Featured Products</h2>
+    <div class="product-grid" id="featured-list"></div>
+  </main>
+
+  <footer>
+    <p>&copy; 2026 PINAKI Homemade Products. All rights reserved.</p>
+  </footer>
+
+  <script>
+    const products = [
+      { id: 1, name: "Pure Desi A2 Cow Ghee", price: 650, weight: "500ml", image: "https://images.unsplash.com/photo-1589927986076-2d1f133d3ef4?auto=format&fit=crop&w=500&q=80" },
+      { id: 2, name: "Homemade Mango Achar", price: 250, weight: "500g", image: "https://images.unsplash.com/photo-1599940824399-b87987ceb72a?auto=format&fit=crop&w=500&q=80" },
+      { id: 3, name: "Cold-Pressed Mustard Oil", price: 220, weight: "1 Litre", image: "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?auto=format&fit=crop&w=500&q=80" }
+    ];
+
+    function updateCartCount() {
+      let cart = JSON.parse(localStorage.getItem('pinaki_cart')) || [];
+      document.getElementById('cart-count').innerText = cart.length;
+    }
+
+    const container = document.getElementById('featured-list');
+    products.forEach(p => {
+      container.innerHTML += `
+        <div class="product-card">
+          <img src="${p.image}" alt="${p.name}">
+          <h3>${p.name}</h3>
+          <div class="price">₹${p.price} / ${p.weight}</div>
+          <button class="add-btn" onclick="addToCart(${p.id})">Add to Cart</button>
+        </div>
+      `;
+    });
+
+    function addToCart(id) {
+      let cart = JSON.parse(localStorage.getItem('pinaki_cart')) || [];
+      const item = products.find(p => p.id === id);
+      cart.push(item);
+      localStorage.setItem('pinaki_cart', JSON.stringify(cart));
+      updateCartCount();
+      alert(`${item.name} added to cart!`);
+    }
+
+    updateCartCount();
+  </script>
+</body>
+</html>
