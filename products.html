@@ -1,10 +1,32 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Products - PINAKI</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>All Products - PINAKI</title>
   <link rel="stylesheet" href="style.css">
+  <style>
+    .badge {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: #ef4444;
+      color: white;
+      padding: 0.2rem 0.6rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: bold;
+    }
+    .rating-box {
+      background: #388e3c;
+      color: white;
+      font-size: 0.8rem;
+      padding: 0.1rem 0.4rem;
+      border-radius: 4px;
+      display: inline-block;
+      margin-bottom: 0.5rem;
+    }
+  </style>
 </head>
 <body>
 
@@ -13,56 +35,80 @@
       <a href="index.html" class="logo">PINAKI</a>
       <div class="nav-links">
         <a href="index.html">Home</a>
-        <a href="products.html">All Products</a>
+        <a href="products.html">Products</a>
+        <a href="user-panel.html">My Orders</a>
         <a href="cart.html" class="cart-btn">🛒 Cart (<span id="cart-count">0</span>)</a>
       </div>
     </nav>
   </header>
 
   <main class="container">
-    <h2 style="text-align: center; margin-bottom: 2rem;">Our Full Catalog</h2>
-    <div class="product-grid" id="catalog-list"></div>
+    <h2 style="text-align: center; margin-bottom: 2rem;">Our Pure Homemade Collection</h2>
+    <div class="product-grid" id="products-catalog">
+      <p style="text-align: center;">Products load ho rahe hain...</p>
+    </div>
   </main>
 
-  <footer>
-    <p>&copy; 2026 PINAKI Homemade Products. All rights reserved.</p>
-  </footer>
-
-  <script>
-    const products = [
-      { id: 1, name: "Pure Desi A2 Cow Ghee", price: 650, weight: "500ml", image: "https://images.unsplash.com/photo-1589927986076-2d1f133d3ef4?auto=format&fit=crop&w=500&q=80" },
-      { id: 2, name: "Homemade Mango Achar", price: 250, weight: "500g", image: "https://images.unsplash.com/photo-1599940824399-b87987ceb72a?auto=format&fit=crop&w=500&q=80" },
-      { id: 3, name: "Cold-Pressed Mustard Oil", price: 220, weight: "1 Litre", image: "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?auto=format&fit=crop&w=500&q=80" },
-      { id: 4, name: "Stuffed Red Chilli Pickle", price: 280, weight: "500g", image: "https://images.unsplash.com/photo-1565557623262-b51c2513a641?auto=format&fit=crop&w=500&q=80" }
-    ];
+  <script type="module">
+    import { db } from './firebase-config.js';
+    import { collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     function updateCartCount() {
       let cart = JSON.parse(localStorage.getItem('pinaki_cart')) || [];
       document.getElementById('cart-count').innerText = cart.length;
     }
 
-    const container = document.getElementById('catalog-list');
-    products.forEach(p => {
-      container.innerHTML += `
-        <div class="product-card">
-          <img src="${p.image}" alt="${p.name}">
-          <h3>${p.name}</h3>
-          <div class="price">₹${p.price} / ${p.weight}</div>
-          <button class="add-btn" onclick="addToCart(${p.id})">Add to Cart</button>
-        </div>
-      `;
-    });
+    async function loadStoreProducts() {
+      const container = document.getElementById('products-catalog');
+      const snap = await getDocs(collection(db, "products"));
 
-    function addToCart(id) {
-      let cart = JSON.parse(localStorage.getItem('pinaki_cart')) || [];
-      const item = products.find(p => p.id === id);
-      cart.push(item);
-      localStorage.setItem('pinaki_cart', JSON.stringify(cart));
-      updateCartCount();
-      alert(`${item.name} added to cart!`);
+      if (snap.empty) {
+        container.innerHTML = "<p style='text-align:center;'>Abhi koi product available nahi hai.</p>";
+        return;
+      }
+
+      container.innerHTML = "";
+      snap.forEach((docSnap) => {
+        const p = docSnap.data();
+        const pId = docSnap.id;
+
+        container.innerHTML += `
+          <div class="product-card" style="position:relative;">
+            ${p.offerTag ? `<span class="badge">${p.offerTag}</span>` : ''}
+            <img src="${p.image}" alt="${p.name}">
+            <div style="padding: 1rem;">
+              <h3>${p.name}</h3>
+              <p style="font-size:0.85rem; color:#666;">${p.weight || ''}</p>
+              
+              <div style="margin: 0.5rem 0;">
+                <span class="rating-box">★ ${p.rating || '4.5'}</span>
+                <small style="color:#777;">(${p.reviewCount || 12} reviews)</small>
+              </div>
+
+              <div class="price">
+                ₹${p.price} 
+                ${p.originalPrice ? `<del style="font-size:0.9rem; color:#878787;">₹${p.originalPrice}</del>` : ''}
+              </div>
+
+              <p style="font-size:0.8rem; color:#555; margin-bottom:1rem;">${p.description || ''}</p>
+
+              <button class="add-btn" onclick="addToCart('${pId}', '${p.name}', ${p.price}, '${p.image}', '${p.weight}')">Add to Cart</button>
+            </div>
+          </div>
+        `;
+      });
     }
 
+    window.addToCart = (id, name, price, image, weight) => {
+      let cart = JSON.parse(localStorage.getItem('pinaki_cart')) || [];
+      cart.push({ id, name, price, image, weight });
+      localStorage.setItem('pinaki_cart', JSON.stringify(cart));
+      updateCartCount();
+      alert(`${name} cart me add ho gaya!`);
+    };
+
     updateCartCount();
+    loadStoreProducts();
   </script>
 </body>
 </html>
