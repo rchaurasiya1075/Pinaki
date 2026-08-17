@@ -3,43 +3,291 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Panel - PINAKI</title>
+  <title>Admin Dashboard - PINAKI</title>
   <link rel="stylesheet" href="style.css">
+  <style>
+    .admin-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+    @media (max-width: 768px) {
+      .admin-grid { grid-template-columns: 1fr; }
+    }
+    .card {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    }
+    .form-row {
+      display: flex;
+      gap: 1rem;
+    }
+    .status-btn {
+      padding: 0.3rem 0.6rem;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 0.8rem;
+    }
+    .btn-ship { background: #3b82f6; color: white; }
+    .btn-deliver { background: #10b981; color: white; }
+    .btn-cancel { background: #ef4444; color: white; }
+    .product-list-item {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      border-bottom: 1px solid #eee;
+      padding: 0.8rem 0;
+    }
+    .product-list-item img {
+      width: 60px;
+      height: 60px;
+      object-fit: cover;
+      border-radius: 6px;
+    }
+  </style>
 </head>
 <body>
-  <div class="container">
-    <h2>Admin Dashboard</h2>
-    <hr style="margin: 1rem 0;">
 
-    <!-- Backup and Restore Section -->
-    <div style="background: white; padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem;">
-      <h3>Database Backup & Restore</h3>
-      <br>
-      <button class="btn-main" id="backup-btn">Download Full JSON Backup</button>
-      <br><br>
-      <input type="file" id="restore-file" accept=".json">
-      <button class="btn-main" id="restore-btn" style="background: #059669;">Restore Database</button>
+  <header>
+    <nav class="navbar">
+      <a href="index.html" class="logo">PINAKI ADMIN</a>
+      <div class="nav-links">
+        <a href="index.html">Store View</a>
+        <a href="user-panel.html">User Panel</a>
+        <button id="logout-btn" style="background:#ef4444; color:white; border:none; padding:0.4rem 0.8rem; border-radius:6px; cursor:pointer;">Logout</button>
+      </div>
+    </nav>
+  </header>
+
+  <main class="container">
+    <h2>Admin Product & Order Management</h2>
+
+    <div class="admin-grid">
+      
+      <!-- Section 1: Naya Product Listing Form -->
+      <div class="card">
+        <h3>➕ Add New Product (Amazon/Flipkart Style)</h3>
+        <br>
+        
+        <div class="form-group">
+          <label>Product Title / Name</label>
+          <input type="text" id="p-name" placeholder="e.g. Pure Desi A2 Cow Ghee" required>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group" style="flex:1;">
+            <label>Original Price (₹)</label>
+            <input type="number" id="p-original-price" placeholder="800" required>
+          </div>
+          <div class="form-group" style="flex:1;">
+            <label>Discounted Price (₹)</label>
+            <input type="number" id="p-price" placeholder="650" required>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group" style="flex:1;">
+            <label>Offer Tag / Badge</label>
+            <input type="text" id="p-offer" placeholder="e.g. 20% OFF / Best Seller">
+          </div>
+          <div class="form-group" style="flex:1;">
+            <label>Weight / Quantity</label>
+            <input type="text" id="p-weight" placeholder="e.g. 500ml / 1kg">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Product Image URL</label>
+          <input type="url" id="p-image" placeholder="https://images.unsplash.com/..." required>
+        </div>
+
+        <div class="form-group">
+          <label>Full Product Details & Specs</label>
+          <textarea id="p-desc" placeholder="Product ke faayde, ingredients, manufacturing details likhein..." rows="3"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Fake/Default Reviews & Rating (1-5)</label>
+          <div class="form-row">
+            <input type="number" id="p-rating" placeholder="Rating (e.g. 4.8)" min="1" max="5" step="0.1" style="flex:1;">
+            <input type="number" id="p-review-count" placeholder="Total Reviews (e.g. 124)" style="flex:1;">
+          </div>
+        </div>
+
+        <button class="btn-main" id="add-product-btn" style="width:100%;">Publish Product to Store</button>
+      </div>
+
+      <!-- Section 2: Product List & Manage -->
+      <div class="card">
+        <h3>📦 Listed Products</h3>
+        <div id="products-list-container" style="max-height: 400px; overflow-y: auto; margin-top: 1rem;">
+          <p>Products load ho rahe hain...</p>
+        </div>
+
+        <hr style="margin: 1.5rem 0;">
+
+        <!-- Backup & Restore -->
+        <h3>💾 Backup & Restore Database</h3>
+        <br>
+        <button class="btn-main" id="backup-btn" style="padding:0.5rem 1rem; font-size:0.9rem;">Download Backup JSON</button>
+        <br><br>
+        <input type="file" id="restore-file" accept=".json" style="font-size:0.8rem;">
+        <button class="btn-main" id="restore-btn" style="background:#059669; padding:0.5rem 1rem; font-size:0.9rem;">Restore</button>
+      </div>
+
     </div>
 
-    <!-- Orders Section -->
-    <div style="background: white; padding: 1.5rem; border-radius: 8px;">
-      <h3>All Customer Orders</h3>
-      <div id="all-orders" style="margin-top: 1rem;">Loading...</div>
+    <!-- Section 3: Live Customer Orders & Status Update -->
+    <div class="card" style="margin-top: 2rem;">
+      <h3>🛒 Customer Orders & Delivery Status Update</h3>
+      <div id="all-orders-container" style="margin-top: 1rem;">
+        <p>Orders load ho rahe hain...</p>
+      </div>
     </div>
-  </div>
+
+  </main>
 
   <script type="module">
     import { auth, db } from './firebase-config.js';
-    import { collection, getDocs, setDoc, doc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { collection, addDoc, getDocs, updateDoc, deleteDoc, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-    // Backup Download Function
+    // 1. Admin Auth Check
+    onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        window.location.href = "auth.html";
+      }
+    });
+
+    // 2. Add Product Function
+    document.getElementById('add-product-btn').addEventListener('click', async () => {
+      const name = document.getElementById('p-name').value;
+      const originalPrice = Number(document.getElementById('p-original-price').value);
+      const price = Number(document.getElementById('p-price').value);
+      const offer = document.getElementById('p-offer').value;
+      const weight = document.getElementById('p-weight').value;
+      const image = document.getElementById('p-image').value;
+      const desc = document.getElementById('p-desc').value;
+      const rating = Number(document.getElementById('p-rating').value) || 4.5;
+      const reviewCount = Number(document.getElementById('p-review-count').value) || 10;
+
+      if (!name || !price || !image) {
+        alert("Product Name, Price aur Image URL zaroori hain!");
+        return;
+      }
+
+      try {
+        await addDoc(collection(db, "products"), {
+          name,
+          originalPrice,
+          price,
+          offerTag: offer || "Special Offer",
+          weight: weight || "1 unit",
+          image,
+          description: desc,
+          rating,
+          reviewCount,
+          createdAt: new Date().toISOString()
+        });
+
+        alert("Product Successfully List ho gaya hai!");
+        location.reload();
+      } catch (err) {
+        alert("Error: " + err.message);
+      }
+    });
+
+    // 3. Load Listed Products
+    async function loadProducts() {
+      const container = document.getElementById('products-list-container');
+      const snap = await getDocs(collection(db, "products"));
+
+      if (snap.empty) {
+        container.innerHTML = "<p>Koi product list nahi hai.</p>";
+        return;
+      }
+
+      container.innerHTML = "";
+      snap.forEach((docSnap) => {
+        const p = docSnap.data();
+        container.innerHTML += `
+          <div class="product-list-item">
+            <img src="${p.image}">
+            <div style="flex:1;">
+              <strong>${p.name}</strong> (${p.weight})
+              <div style="font-size:0.85rem; color:#666;">
+                Price: ₹${p.price} <del style="color:red;">₹${p.originalPrice || ''}</del> | ⭐ ${p.rating} (${p.reviewCount} reviews)
+              </div>
+            </div>
+            <button onclick="deleteProduct('${docSnap.id}')" style="background:red; color:white; border:none; padding:0.3rem 0.6rem; border-radius:4px; cursor:pointer;">Delete</button>
+          </div>
+        `;
+      });
+    }
+
+    // Product Delete
+    window.deleteProduct = async (id) => {
+      if (confirm("Kya aap iss product ko hatana chahte hain?")) {
+        await deleteDoc(doc(db, "products", id));
+        loadProducts();
+      }
+    };
+
+    // 4. Load Customer Orders & Change Status
+    async function loadOrders() {
+      const container = document.getElementById('all-orders-container');
+      const snap = await getDocs(collection(db, "orders"));
+
+      if (snap.empty) {
+        container.innerHTML = "<p>Abhi tak koi customer order nahi aaya hai.</p>";
+        return;
+      }
+
+      container.innerHTML = "";
+      snap.forEach((docSnap) => {
+        const o = docSnap.data();
+        const orderId = docSnap.id;
+
+        let itemsText = o.items ? o.items.map(i => i.name).join(", ") : "Items";
+
+        container.innerHTML += `
+          <div style="border:1px solid #ddd; padding:1rem; border-radius:8px; margin-bottom:1rem; background:#fafafa;">
+            <div style="display:flex; justify-content:space-between; margin-bottom:0.5rem;">
+              <strong>Order #${orderId}</strong>
+              <span style="font-weight:bold; color:var(--primary);">Status: ${o.status || 'Confirmed'}</span>
+            </div>
+            <p><strong>Customer:</strong> ${o.customerName || 'N/A'} (${o.phone}) | <strong>Address:</strong> ${o.deliveryAddress}</p>
+            <p><strong>Items:</strong> ${itemsText} | <strong>Total Amount:</strong> ₹${o.totalAmount}</p>
+            
+            <div style="margin-top:0.8rem; display:flex; gap:0.5rem;">
+              <button onclick="updateOrderStatus('${orderId}', 'Shipped')" class="status-btn btn-ship">Mark Shipped</button>
+              <button onclick="updateOrderStatus('${orderId}', 'Delivered')" class="status-btn btn-deliver">Mark Delivered</button>
+              <button onclick="updateOrderStatus('${orderId}', 'Cancelled')" class="status-btn btn-cancel">Cancel Order</button>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    window.updateOrderStatus = async (orderId, newStatus) => {
+      await updateDoc(doc(db, "orders", orderId), { status: newStatus });
+      alert(`Order status updated to: ${newStatus}`);
+      loadOrders();
+    };
+
+    // Backup
     document.getElementById('backup-btn').addEventListener('click', async () => {
       const ordersSnap = await getDocs(collection(db, "orders"));
-      const usersSnap = await getDocs(collection(db, "users"));
+      const productsSnap = await getDocs(collection(db, "products"));
       
       const backupData = {
         orders: ordersSnap.docs.map(d => ({ id: d.id, ...d.data() })),
-        users: usersSnap.docs.map(d => ({ id: d.id, ...d.data() }))
+        products: productsSnap.docs.map(d => ({ id: d.id, ...d.data() }))
       };
 
       const blob = new Blob([JSON.stringify(backupData, null, 2)], { type: "application/json" });
@@ -50,52 +298,34 @@
       a.click();
     });
 
-    // Restore Function
+    // Restore
     document.getElementById('restore-btn').addEventListener('click', () => {
       const fileInput = document.getElementById('restore-file');
       if (!fileInput.files[0]) {
-        alert("Kripya backup JSON file select karein.");
+        alert("Select a backup JSON file.");
         return;
       }
 
       const reader = new FileReader();
       reader.onload = async (e) => {
         const data = JSON.parse(e.target.result);
-        if (data.orders) {
-          for (let order of data.orders) {
-            await setDoc(doc(db, "orders", order.id), order);
+        if (data.products) {
+          for (let p of data.products) {
+            await setDoc(doc(db, "products", p.id), p);
           }
         }
-        alert("Database restore ho gaya hai!");
+        alert("Database successfully restored!");
         location.reload();
       };
       reader.readAsText(fileInput.files[0]);
     });
 
-    // Fetch All Orders
-    async function loadAllOrders() {
-      const querySnapshot = await getDocs(collection(db, "orders"));
-      const container = document.getElementById('all-orders');
-      
-      if (querySnapshot.empty) {
-        container.innerHTML = "<p>Koi order nahi mila.</p>";
-        return;
-      }
+    document.getElementById('logout-btn').addEventListener('click', () => {
+      signOut(auth).then(() => window.location.href = "auth.html");
+    });
 
-      container.innerHTML = "";
-      querySnapshot.forEach((docSnap) => {
-        const order = docSnap.data();
-        container.innerHTML += `
-          <div style="border-bottom: 1px solid #ccc; padding: 0.5rem 0;">
-            <strong>Order ID:</strong> ${docSnap.id} | 
-            <strong>Total:</strong> ₹${order.totalAmount} | 
-            <strong>Payment:</strong> ${order.paymentStatus}
-          </div>
-        `;
-      });
-    }
-
-    loadAllOrders();
+    loadProducts();
+    loadOrders();
   </script>
 </body>
 </html>
