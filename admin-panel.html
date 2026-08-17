@@ -1,25 +1,27 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin Panel - PINAKI</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="container">
-    <h2>Admin Management Dashboard</h2>
+    <h2>Admin Dashboard</h2>
     <hr style="margin: 1rem 0;">
 
-    <!-- Backup & Restore System -->
+    <!-- Backup and Restore Section -->
     <div style="background: white; padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem;">
-      <h3>Database Backup & Restore System</h3>
+      <h3>Database Backup & Restore</h3>
       <br>
       <button class="btn-main" id="backup-btn">Download Full JSON Backup</button>
-      <input type="file" id="restore-file" accept=".json" style="margin-left: 1rem;">
-      <button class="btn-main" id="restore-btn" style="background: #059669;">Restore Data</button>
+      <br><br>
+      <input type="file" id="restore-file" accept=".json">
+      <button class="btn-main" id="restore-btn" style="background: #059669;">Restore Database</button>
     </div>
 
-    <!-- Live Orders Section -->
+    <!-- Orders Section -->
     <div style="background: white; padding: 1.5rem; border-radius: 8px;">
       <h3>All Customer Orders</h3>
       <div id="all-orders" style="margin-top: 1rem;">Loading...</div>
@@ -30,7 +32,7 @@
     import { auth, db } from './firebase-config.js';
     import { collection, getDocs, setDoc, doc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-    // Download Backup
+    // Backup Download Function
     document.getElementById('backup-btn').addEventListener('click', async () => {
       const ordersSnap = await getDocs(collection(db, "orders"));
       const usersSnap = await getDocs(collection(db, "users"));
@@ -48,28 +50,52 @@
       a.click();
     });
 
-    // Restore Backup
+    // Restore Function
     document.getElementById('restore-btn').addEventListener('click', () => {
       const fileInput = document.getElementById('restore-file');
       if (!fileInput.files[0]) {
-        alert("Please select a backup JSON file first.");
+        alert("Kripya backup JSON file select karein.");
         return;
       }
 
       const reader = new FileReader();
       reader.onload = async (e) => {
         const data = JSON.parse(e.target.result);
-        
         if (data.orders) {
           for (let order of data.orders) {
             await setDoc(doc(db, "orders", order.id), order);
           }
         }
-        alert("Database successfully restored!");
+        alert("Database restore ho gaya hai!");
         location.reload();
       };
       reader.readAsText(fileInput.files[0]);
     });
+
+    // Fetch All Orders
+    async function loadAllOrders() {
+      const querySnapshot = await getDocs(collection(db, "orders"));
+      const container = document.getElementById('all-orders');
+      
+      if (querySnapshot.empty) {
+        container.innerHTML = "<p>Koi order nahi mila.</p>";
+        return;
+      }
+
+      container.innerHTML = "";
+      querySnapshot.forEach((docSnap) => {
+        const order = docSnap.data();
+        container.innerHTML += `
+          <div style="border-bottom: 1px solid #ccc; padding: 0.5rem 0;">
+            <strong>Order ID:</strong> ${docSnap.id} | 
+            <strong>Total:</strong> ₹${order.totalAmount} | 
+            <strong>Payment:</strong> ${order.paymentStatus}
+          </div>
+        `;
+      });
+    }
+
+    loadAllOrders();
   </script>
 </body>
 </html>
