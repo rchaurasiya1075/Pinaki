@@ -4,328 +4,191 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin Dashboard - PINAKI</title>
-  <link rel="stylesheet" href="style.css">
   <style>
-    .admin-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1.5rem;
-      margin-top: 1.5rem;
+    :root {
+      --primary: #d97706;
+      --primary-hover: #b45309;
+      --bg-color: #f1f5f9;
+      --card-bg: #ffffff;
+      --text-main: #0f172a;
+      --border-color: #cbd5e1;
     }
-    @media (max-width: 768px) {
-      .admin-grid { grid-template-columns: 1fr; }
-    }
-    .card {
-      background: white;
-      padding: 1.5rem;
-      border-radius: 12px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-    }
-    .form-row {
-      display: flex;
-      gap: 1rem;
-    }
-    .status-btn {
-      padding: 0.3rem 0.6rem;
-      border-radius: 6px;
-      border: none;
-      cursor: pointer;
-      font-weight: bold;
-      font-size: 0.8rem;
-    }
-    .btn-ship { background: #3b82f6; color: white; }
-    .btn-deliver { background: #10b981; color: white; }
-    .btn-cancel { background: #ef4444; color: white; }
-    .product-list-item {
-      display: flex;
-      gap: 1rem;
-      align-items: center;
-      border-bottom: 1px solid #eee;
-      padding: 0.8rem 0;
-    }
-    .product-list-item img {
-      width: 60px;
-      height: 60px;
-      object-fit: cover;
-      border-radius: 6px;
-    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, sans-serif; }
+    body { background-color: var(--bg-color); color: var(--text-main); }
+
+    header { background: #1e293b; color: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+    .logo { font-size: 1.5rem; font-weight: bold; color: var(--primary); }
+
+    .container { max-width: 1100px; margin: 2rem auto; padding: 0 1rem; }
+    
+    .panel-card { background: white; padding: 1.8rem; border-radius: 10px; border: 1px solid var(--border-color); margin-bottom: 2rem; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+    .panel-card h2 { margin-bottom: 1.2rem; color: #1e293b; border-bottom: 2px solid var(--primary); padding-bottom: 0.4rem; font-size: 1.3rem; }
+
+    .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; }
+    .form-group { margin-bottom: 1rem; }
+    .form-group label { display: block; font-weight: 600; margin-bottom: 0.3rem; font-size: 0.9rem; }
+    .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 0.65rem; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.95rem; }
+    .form-group.full-width { grid-column: 1 / -1; }
+
+    .btn-submit { background: var(--primary); color: white; border: none; padding: 0.8rem 1.5rem; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 1rem; }
+    .btn-submit:hover { background: var(--primary-hover); }
+
+    .product-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; }
+    .prod-item { background: white; border: 1px solid var(--border-color); border-radius: 8px; padding: 1rem; display: flex; flex-direction: column; }
+    .prod-item img { width: 100%; height: 160px; object-fit: cover; border-radius: 6px; margin-bottom: 0.8rem; }
+    .price-tag { font-size: 1.1rem; font-weight: bold; color: var(--primary); margin: 0.4rem 0; }
+    .old-price { text-decoration: line-through; color: #64748b; font-size: 0.9rem; margin-right: 0.5rem; }
+    .badge { background: #dcfce7; color: #15803d; padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.8rem; font-weight: bold; }
   </style>
 </head>
 <body>
 
   <header>
-    <nav class="navbar">
-      <a href="index.html" class="logo">PINAKI ADMIN</a>
-      <div class="nav-links">
-        <a href="index.html">Store View</a>
-        <a href="user-panel.html">User Panel</a>
-        <button id="logout-btn" style="background:#ef4444; color:white; border:none; padding:0.4rem 0.8rem; border-radius:6px; cursor:pointer;">Logout</button>
-      </div>
-    </nav>
+    <div class="logo">PINAKI Admin Panel</div>
+    <div id="admin-user-info">Logged in as Admin</div>
   </header>
 
   <main class="container">
-    <h2>Admin Product & Order Management</h2>
-
-    <div class="admin-grid">
-      
-      <!-- Section 1: Naya Product Listing Form -->
-      <div class="card">
-        <h3>➕ Add New Product (Amazon/Flipkart Style)</h3>
-        <br>
-        
-        <div class="form-group">
-          <label>Product Title / Name</label>
-          <input type="text" id="p-name" placeholder="e.g. Pure Desi A2 Cow Ghee" required>
-        </div>
-
-        <div class="form-row">
-          <div class="form-group" style="flex:1;">
-            <label>Original Price (₹)</label>
-            <input type="number" id="p-original-price" placeholder="800" required>
+    <!-- Add Product Section -->
+    <section class="panel-card">
+      <h2>Add New Product with Offer & Details</h2>
+      <form id="add-product-form">
+        <div class="form-grid">
+          <div class="form-group full-width">
+            <label>Product Title / Name *</label>
+            <input type="text" id="p-title" placeholder="e.g. Premium Cotton Shirt" required>
           </div>
-          <div class="form-group" style="flex:1;">
-            <label>Discounted Price (₹)</label>
-            <input type="number" id="p-price" placeholder="650" required>
+          
+          <div class="form-group">
+            <label>Original MRP (₹) *</label>
+            <input type="number" id="p-mrp" placeholder="1000" required>
           </div>
-        </div>
 
-        <div class="form-row">
-          <div class="form-group" style="flex:1;">
-            <label>Offer Tag / Badge</label>
-            <input type="text" id="p-offer" placeholder="e.g. 20% OFF / Best Seller">
+          <div class="form-group">
+            <label>Offer Price (₹) *</label>
+            <input type="number" id="p-price" placeholder="799" required>
           </div>
-          <div class="form-group" style="flex:1;">
-            <label>Weight / Quantity</label>
-            <input type="text" id="p-weight" placeholder="e.g. 500ml / 1kg">
+
+          <div class="form-group">
+            <label>Category *</label>
+            <select id="p-category" required>
+              <option value="Clothing">Clothing</option>
+              <option value="Electronics">Electronics</option>
+              <option value="Footwear">Footwear</option>
+              <option value="Accessories">Accessories</option>
+            </select>
           </div>
-        </div>
 
-        <div class="form-group">
-          <label>Product Image URL</label>
-          <input type="url" id="p-image" placeholder="https://images.unsplash.com/..." required>
-        </div>
+          <div class="form-group">
+            <label>Stock Quantity *</label>
+            <input type="number" id="p-stock" value="10" required>
+          </div>
 
-        <div class="form-group">
-          <label>Full Product Details & Specs</label>
-          <textarea id="p-desc" placeholder="Product ke faayde, ingredients, manufacturing details likhein..." rows="3"></textarea>
-        </div>
+          <div class="form-group full-width">
+            <label>Image URL *</label>
+            <input type="url" id="p-image" placeholder="https://example.com/image.jpg" required>
+          </div>
 
-        <div class="form-group">
-          <label>Fake/Default Reviews & Rating (1-5)</label>
-          <div class="form-row">
-            <input type="number" id="p-rating" placeholder="Rating (e.g. 4.8)" min="1" max="5" step="0.1" style="flex:1;">
-            <input type="number" id="p-review-count" placeholder="Total Reviews (e.g. 124)" style="flex:1;">
+          <div class="form-group full-width">
+            <label>Product Full Description</label>
+            <textarea id="p-desc" rows="3" placeholder="Enter product details, specifications, material, etc."></textarea>
           </div>
         </div>
 
-        <button class="btn-main" id="add-product-btn" style="width:100%;">Publish Product to Store</button>
+        <button type="submit" class="btn-submit">Publish Product</button>
+        <p id="form-msg" style="margin-top: 1rem; font-weight: bold;"></p>
+      </form>
+    </section>
+
+    <!-- Listed Products Section -->
+    <section class="panel-card">
+      <h2>All Listed Products</h2>
+      <div class="product-list" id="admin-products-grid">
+        <p>Loading products...</p>
       </div>
-
-      <!-- Section 2: Product List & Manage -->
-      <div class="card">
-        <h3>📦 Listed Products</h3>
-        <div id="products-list-container" style="max-height: 400px; overflow-y: auto; margin-top: 1rem;">
-          <p>Products load ho rahe hain...</p>
-        </div>
-
-        <hr style="margin: 1.5rem 0;">
-
-        <!-- Backup & Restore -->
-        <h3>💾 Backup & Restore Database</h3>
-        <br>
-        <button class="btn-main" id="backup-btn" style="padding:0.5rem 1rem; font-size:0.9rem;">Download Backup JSON</button>
-        <br><br>
-        <input type="file" id="restore-file" accept=".json" style="font-size:0.8rem;">
-        <button class="btn-main" id="restore-btn" style="background:#059669; padding:0.5rem 1rem; font-size:0.9rem;">Restore</button>
-      </div>
-
-    </div>
-
-    <!-- Section 3: Live Customer Orders & Status Update -->
-    <div class="card" style="margin-top: 2rem;">
-      <h3>🛒 Customer Orders & Delivery Status Update</h3>
-      <div id="all-orders-container" style="margin-top: 1rem;">
-        <p>Orders load ho rahe hain...</p>
-      </div>
-    </div>
-
+    </section>
   </main>
 
   <script type="module">
-    import { auth, db } from './firebase-config.js';
-    import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-    import { collection, addDoc, getDocs, updateDoc, deleteDoc, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { db, auth } from './firebase-config.js';
+    import { collection, addDoc, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-    // 1. Admin Auth Check
-    onAuthStateChanged(auth, (user) => {
-      if (!user) {
-        window.location.href = "auth.html";
+    const form = document.getElementById('add-product-form');
+    const msg = document.getElementById('form-msg');
+    const grid = document.getElementById('admin-products-grid');
+
+    // Load Products
+    async function fetchProducts() {
+      try {
+        const snap = await getDocs(collection(db, "products"));
+        if(snap.empty) {
+          grid.innerHTML = "<p>Koi product list nahi hai.</p>";
+          return;
+        }
+        grid.innerHTML = '';
+        snap.forEach((docSnap) => {
+          const item = docSnap.data();
+          const id = docSnap.id;
+          const discount = item.mrp ? Math.round(((item.mrp - item.price) / item.mrp) * 100) : 0;
+          
+          const card = document.createElement('div');
+          card.className = 'prod-item';
+          card.innerHTML = `
+            <img src="${item.imageUrl}">
+            <h4>${item.title}</h4>
+            <p style="font-size: 0.85rem; color: #64748b;">${item.category || 'General'}</p>
+            <div class="price-tag">
+              <span class="old-price">₹${item.mrp || item.price}</span> ₹${item.price} 
+              <span class="badge">${discount}% OFF</span>
+            </div>
+            <p style="font-size: 0.85rem; margin-bottom: 0.5rem;">Stock: ${item.stock || 0}</p>
+            <button onclick="removeProduct('${id}')" style="background: red; color: white; border: none; padding: 0.4rem; border-radius: 4px; cursor: pointer; margin-top: auto;">Delete Product</button>
+          `;
+          grid.appendChild(card);
+        });
+      } catch(e) {
+        grid.innerHTML = "<p>Error loading: " + e.message + "</p>";
       }
-    });
+    }
 
-    // 2. Add Product Function
-    document.getElementById('add-product-btn').addEventListener('click', async () => {
-      const name = document.getElementById('p-name').value;
-      const originalPrice = Number(document.getElementById('p-original-price').value);
-      const price = Number(document.getElementById('p-price').value);
-      const offer = document.getElementById('p-offer').value;
-      const weight = document.getElementById('p-weight').value;
-      const image = document.getElementById('p-image').value;
-      const desc = document.getElementById('p-desc').value;
-      const rating = Number(document.getElementById('p-rating').value) || 4.5;
-      const reviewCount = Number(document.getElementById('p-review-count').value) || 10;
+    fetchProducts();
 
-      if (!name || !price || !image) {
-        alert("Product Name, Price aur Image URL zaroori hain!");
-        return;
-      }
+    // Add Product
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      msg.style.color = "blue";
+      msg.innerText = "Saving product...";
+
+      const newProduct = {
+        title: document.getElementById('p-title').value,
+        mrp: Number(document.getElementById('p-mrp').value),
+        price: Number(document.getElementById('p-price').value),
+        category: document.getElementById('p-category').value,
+        stock: Number(document.getElementById('p-stock').value),
+        imageUrl: document.getElementById('p-image').value,
+        description: document.getElementById('p-desc').value,
+        createdAt: new Date().toISOString()
+      };
 
       try {
-        await addDoc(collection(db, "products"), {
-          name,
-          originalPrice,
-          price,
-          offerTag: offer || "Special Offer",
-          weight: weight || "1 unit",
-          image,
-          description: desc,
-          rating,
-          reviewCount,
-          createdAt: new Date().toISOString()
-        });
-
-        alert("Product Successfully List ho gaya hai!");
-        location.reload();
-      } catch (err) {
-        alert("Error: " + err.message);
+        await addDoc(collection(db, "products"), newProduct);
+        msg.style.color = "green";
+        msg.innerText = "Product successfully listed!";
+        form.reset();
+        fetchProducts();
+      } catch(err) {
+        msg.style.color = "red";
+        msg.innerText = "Error: " + err.message;
       }
     });
 
-    // 3. Load Listed Products
-    async function loadProducts() {
-      const container = document.getElementById('products-list-container');
-      const snap = await getDocs(collection(db, "products"));
-
-      if (snap.empty) {
-        container.innerHTML = "<p>Koi product list nahi hai.</p>";
-        return;
-      }
-
-      container.innerHTML = "";
-      snap.forEach((docSnap) => {
-        const p = docSnap.data();
-        container.innerHTML += `
-          <div class="product-list-item">
-            <img src="${p.image}">
-            <div style="flex:1;">
-              <strong>${p.name}</strong> (${p.weight})
-              <div style="font-size:0.85rem; color:#666;">
-                Price: ₹${p.price} <del style="color:red;">₹${p.originalPrice || ''}</del> | ⭐ ${p.rating} (${p.reviewCount} reviews)
-              </div>
-            </div>
-            <button onclick="deleteProduct('${docSnap.id}')" style="background:red; color:white; border:none; padding:0.3rem 0.6rem; border-radius:4px; cursor:pointer;">Delete</button>
-          </div>
-        `;
-      });
-    }
-
-    // Product Delete
-    window.deleteProduct = async (id) => {
-      if (confirm("Kya aap iss product ko hatana chahte hain?")) {
+    window.removeProduct = async function(id) {
+      if(confirm("Kya aap is product ko delete karna chahte hain?")) {
         await deleteDoc(doc(db, "products", id));
-        loadProducts();
+        fetchProducts();
       }
     };
-
-    // 4. Load Customer Orders & Change Status
-    async function loadOrders() {
-      const container = document.getElementById('all-orders-container');
-      const snap = await getDocs(collection(db, "orders"));
-
-      if (snap.empty) {
-        container.innerHTML = "<p>Abhi tak koi customer order nahi aaya hai.</p>";
-        return;
-      }
-
-      container.innerHTML = "";
-      snap.forEach((docSnap) => {
-        const o = docSnap.data();
-        const orderId = docSnap.id;
-
-        let itemsText = o.items ? o.items.map(i => i.name).join(", ") : "Items";
-
-        container.innerHTML += `
-          <div style="border:1px solid #ddd; padding:1rem; border-radius:8px; margin-bottom:1rem; background:#fafafa;">
-            <div style="display:flex; justify-content:space-between; margin-bottom:0.5rem;">
-              <strong>Order #${orderId}</strong>
-              <span style="font-weight:bold; color:var(--primary);">Status: ${o.status || 'Confirmed'}</span>
-            </div>
-            <p><strong>Customer:</strong> ${o.customerName || 'N/A'} (${o.phone}) | <strong>Address:</strong> ${o.deliveryAddress}</p>
-            <p><strong>Items:</strong> ${itemsText} | <strong>Total Amount:</strong> ₹${o.totalAmount}</p>
-            
-            <div style="margin-top:0.8rem; display:flex; gap:0.5rem;">
-              <button onclick="updateOrderStatus('${orderId}', 'Shipped')" class="status-btn btn-ship">Mark Shipped</button>
-              <button onclick="updateOrderStatus('${orderId}', 'Delivered')" class="status-btn btn-deliver">Mark Delivered</button>
-              <button onclick="updateOrderStatus('${orderId}', 'Cancelled')" class="status-btn btn-cancel">Cancel Order</button>
-            </div>
-          </div>
-        `;
-      });
-    }
-
-    window.updateOrderStatus = async (orderId, newStatus) => {
-      await updateDoc(doc(db, "orders", orderId), { status: newStatus });
-      alert(`Order status updated to: ${newStatus}`);
-      loadOrders();
-    };
-
-    // Backup
-    document.getElementById('backup-btn').addEventListener('click', async () => {
-      const ordersSnap = await getDocs(collection(db, "orders"));
-      const productsSnap = await getDocs(collection(db, "products"));
-      
-      const backupData = {
-        orders: ordersSnap.docs.map(d => ({ id: d.id, ...d.data() })),
-        products: productsSnap.docs.map(d => ({ id: d.id, ...d.data() }))
-      };
-
-      const blob = new Blob([JSON.stringify(backupData, null, 2)], { type: "application/json" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `pinaki_backup_${Date.now()}.json`;
-      a.click();
-    });
-
-    // Restore
-    document.getElementById('restore-btn').addEventListener('click', () => {
-      const fileInput = document.getElementById('restore-file');
-      if (!fileInput.files[0]) {
-        alert("Select a backup JSON file.");
-        return;
-      }
-
-      const reader = new FileReader();
-      reader.onload = async (e) => {
-        const data = JSON.parse(e.target.result);
-        if (data.products) {
-          for (let p of data.products) {
-            await setDoc(doc(db, "products", p.id), p);
-          }
-        }
-        alert("Database successfully restored!");
-        location.reload();
-      };
-      reader.readAsText(fileInput.files[0]);
-    });
-
-    document.getElementById('logout-btn').addEventListener('click', () => {
-      signOut(auth).then(() => window.location.href = "auth.html");
-    });
-
-    loadProducts();
-    loadOrders();
   </script>
 </body>
 </html>
