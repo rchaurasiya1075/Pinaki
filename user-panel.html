@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>User Dashboard - PINAKI</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+      <h2>My Account & Order History</h2>
+      <button id="logout-btn" style="background: red; color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer;">Logout</button>
+    </div>
+
+    <div id="orders-list">Loading orders...</div>
+  </div>
+
+  <script type="module">
+    import { auth, db } from './firebase-config.js';
+    import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        window.location.href = "auth.html";
+        return;
+      }
+
+      const q = query(collection(db, "orders"), where("userId", "==", user.uid));
+      const querySnapshot = await getDocs(q);
+      const container = document.getElementById('orders-list');
+      
+      if (querySnapshot.empty) {
+        container.innerHTML = "<p>No previous orders found.</p>";
+        return;
+      }
+
+      container.innerHTML = "";
+      querySnapshot.forEach((doc) => {
+        const order = doc.data();
+        container.innerHTML += `
+          <div style="background: white; padding: 1.5rem; border-radius: 8px; margin-bottom: 1rem; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+            <h3>Order ID: ${doc.id}</h3>
+            <p><strong>Total:</strong> ₹${order.totalAmount} | <strong>Status:</strong> ${order.status}</p>
+            <p><strong>Payment Status:</strong> ${order.paymentStatus}</p>
+            <p><small>Placed on: ${new Date(order.timestamp).toLocaleString()}</small></p>
+          </div>
+        `;
+      });
+    });
+
+    document.getElementById('logout-btn').addEventListener('click', () => {
+      signOut(auth).then(() => window.location.href = "auth.html");
+    });
+  </script>
+</body>
+</html>
