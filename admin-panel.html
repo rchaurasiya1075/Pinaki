@@ -11,19 +11,21 @@
       --bg-color: #f1f5f9;
       --card-bg: #ffffff;
       --text-main: #0f172a;
+      --text-muted: #64748b;
       --border-color: #cbd5e1;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, sans-serif; }
     body { background-color: var(--bg-color); color: var(--text-main); }
 
-    header { background: #1e293b; color: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
-    .logo { font-size: 1.5rem; font-weight: bold; color: var(--primary); }
+    header { background: #1e293b; color: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
+    .logo { font-size: 1.5rem; font-weight: 800; color: var(--primary); }
+    .admin-badge { background: #334155; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.85rem; color: #cbd5e1; }
 
-    .container { max-width: 1100px; margin: 2rem auto; padding: 0 1rem; }
+    .container { max-width: 1200px; margin: 2rem auto; padding: 0 1rem; }
     
-    .panel-card { background: white; padding: 1.8rem; border-radius: 10px; border: 1px solid var(--border-color); margin-bottom: 2rem; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
-    .panel-card h2 { margin-bottom: 1.2rem; color: #1e293b; border-bottom: 2px solid var(--primary); padding-bottom: 0.4rem; font-size: 1.3rem; }
+    .panel-card { background: white; padding: 1.8rem; border-radius: 10px; border: 1px solid var(--border-color); margin-bottom: 2rem; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+    .panel-card h2 { margin-bottom: 1.2rem; color: #1e293b; border-bottom: 2px solid var(--primary); padding-bottom: 0.4rem; font-size: 1.3rem; display: flex; justify-content: space-between; align-items: center; }
 
     .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; }
     .form-group { margin-bottom: 1rem; }
@@ -34,55 +36,63 @@
     .btn-submit { background: var(--primary); color: white; border: none; padding: 0.8rem 1.5rem; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 1rem; }
     .btn-submit:hover { background: var(--primary-hover); }
 
-    .product-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; }
-    .prod-item { background: white; border: 1px solid var(--border-color); border-radius: 8px; padding: 1rem; display: flex; flex-direction: column; }
-    .prod-item img { width: 100%; height: 160px; object-fit: cover; border-radius: 6px; margin-bottom: 0.8rem; }
+    .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1.2rem; }
+    .prod-card { background: white; border: 1px solid var(--border-color); border-radius: 8px; padding: 1rem; display: flex; flex-direction: column; position: relative; }
+    .prod-card img { width: 100%; height: 160px; object-fit: cover; border-radius: 6px; margin-bottom: 0.8rem; background: #f8fafc; }
     .price-tag { font-size: 1.1rem; font-weight: bold; color: var(--primary); margin: 0.4rem 0; }
-    .old-price { text-decoration: line-through; color: #64748b; font-size: 0.9rem; margin-right: 0.5rem; }
-    .badge { background: #dcfce7; color: #15803d; padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.8rem; font-weight: bold; }
+    .old-price { text-decoration: line-through; color: var(--text-muted); font-size: 0.9rem; margin-right: 0.4rem; }
+    .badge-off { background: #dcfce7; color: #15803d; padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.8rem; font-weight: bold; }
+
+    .orders-table { width: 100%; border-collapse: collapse; margin-top: 1rem; font-size: 0.9rem; }
+    .orders-table th, .orders-table td { border: 1px solid var(--border-color); padding: 0.75rem; text-align: left; }
+    .orders-table th { background: #f8fafc; font-weight: 700; }
+    .status-select { padding: 0.3rem; border-radius: 4px; font-size: 0.85rem; font-weight: bold; }
+    
+    .btn-delete { background: #ef4444; color: white; border: none; padding: 0.4rem 0.8rem; border-radius: 4px; cursor: pointer; margin-top: auto; font-weight: 600; }
   </style>
 </head>
 <body>
 
   <header>
     <div class="logo">PINAKI Admin Panel</div>
-    <div id="admin-user-info">Logged in as Admin</div>
+    <div class="admin-badge">Single-URL Admin Control</div>
   </header>
 
   <main class="container">
-    <!-- Add Product Section -->
+    
+    <!-- OPTION 1: Add New Product & Offers -->
     <section class="panel-card">
-      <h2>Add New Product with Offer & Details</h2>
+      <h2>1. Add Product with Offer & Details</h2>
       <form id="add-product-form">
         <div class="form-grid">
           <div class="form-group full-width">
             <label>Product Title / Name *</label>
-            <input type="text" id="p-title" placeholder="e.g. Premium Cotton Shirt" required>
+            <input type="text" id="p-title" placeholder="e.g. Cotton Kurta Set" required>
           </div>
           
           <div class="form-group">
             <label>Original MRP (₹) *</label>
-            <input type="number" id="p-mrp" placeholder="1000" required>
+            <input type="number" id="p-mrp" placeholder="1499" required>
           </div>
 
           <div class="form-group">
-            <label>Offer Price (₹) *</label>
-            <input type="number" id="p-price" placeholder="799" required>
+            <label>Offer Sale Price (₹) *</label>
+            <input type="number" id="p-price" placeholder="899" required>
           </div>
 
           <div class="form-group">
             <label>Category *</label>
             <select id="p-category" required>
               <option value="Clothing">Clothing</option>
-              <option value="Electronics">Electronics</option>
               <option value="Footwear">Footwear</option>
+              <option value="Electronics">Electronics</option>
               <option value="Accessories">Accessories</option>
             </select>
           </div>
 
           <div class="form-group">
             <label>Stock Quantity *</label>
-            <input type="number" id="p-stock" value="10" required>
+            <input type="number" id="p-stock" value="15" required>
           </div>
 
           <div class="form-group full-width">
@@ -92,33 +102,56 @@
 
           <div class="form-group full-width">
             <label>Product Full Description</label>
-            <textarea id="p-desc" rows="3" placeholder="Enter product details, specifications, material, etc."></textarea>
+            <textarea id="p-desc" rows="3" placeholder="Enter specifications, material quality, sizes available, etc."></textarea>
           </div>
         </div>
 
-        <button type="submit" class="btn-submit">Publish Product</button>
+        <button type="submit" class="btn-submit">Publish Product Live</button>
         <p id="form-msg" style="margin-top: 1rem; font-weight: bold;"></p>
       </form>
     </section>
 
-    <!-- Listed Products Section -->
+    <!-- OPTION 2: Listed Products List -->
     <section class="panel-card">
-      <h2>All Listed Products</h2>
-      <div class="product-list" id="admin-products-grid">
+      <h2>2. Listed Products Catalog</h2>
+      <div class="product-grid" id="admin-products-grid">
         <p>Loading products...</p>
       </div>
     </section>
+
+    <!-- OPTION 3: Manage Customer Orders -->
+    <section class="panel-card">
+      <h2>3. Live Customer Orders</h2>
+      <div style="overflow-x: auto;">
+        <table class="orders-table">
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th>Customer Name</th>
+              <th>Phone & Address</th>
+              <th>Total Amount</th>
+              <th>Order Status</th>
+            </tr>
+          </thead>
+          <tbody id="orders-table-body">
+            <tr><td colspan="5">Loading customer orders...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
   </main>
 
   <script type="module">
-    import { db, auth } from './firebase-config.js';
-    import { collection, addDoc, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { db } from './firebase-config.js';
+    import { collection, addDoc, getDocs, deleteDoc, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     const form = document.getElementById('add-product-form');
     const msg = document.getElementById('form-msg');
     const grid = document.getElementById('admin-products-grid');
+    const ordersBody = document.getElementById('orders-table-body');
 
-    // Load Products
+    // Fetch All Listed Products
     async function fetchProducts() {
       try {
         const snap = await getDocs(collection(db, "products"));
@@ -133,32 +166,66 @@
           const discount = item.mrp ? Math.round(((item.mrp - item.price) / item.mrp) * 100) : 0;
           
           const card = document.createElement('div');
-          card.className = 'prod-item';
+          card.className = 'prod-card';
           card.innerHTML = `
             <img src="${item.imageUrl}">
             <h4>${item.title}</h4>
-            <p style="font-size: 0.85rem; color: #64748b;">${item.category || 'General'}</p>
+            <p style="font-size: 0.8rem; color: #64748b;">${item.category || 'General'}</p>
             <div class="price-tag">
               <span class="old-price">₹${item.mrp || item.price}</span> ₹${item.price} 
-              <span class="badge">${discount}% OFF</span>
+              <span class="badge-off">${discount}% OFF</span>
             </div>
-            <p style="font-size: 0.85rem; margin-bottom: 0.5rem;">Stock: ${item.stock || 0}</p>
-            <button onclick="removeProduct('${id}')" style="background: red; color: white; border: none; padding: 0.4rem; border-radius: 4px; cursor: pointer; margin-top: auto;">Delete Product</button>
+            <p style="font-size: 0.85rem; margin-bottom: 0.6rem;">Stock: ${item.stock || 0}</p>
+            <button class="btn-delete" onclick="removeProduct('${id}')">Delete Product</button>
           `;
           grid.appendChild(card);
         });
       } catch(e) {
-        grid.innerHTML = "<p>Error loading: " + e.message + "</p>";
+        grid.innerHTML = "<p style='color:red;'>Error: " + e.message + "</p>";
+      }
+    }
+
+    // Fetch All Customer Orders
+    async function fetchOrders() {
+      try {
+        const snap = await getDocs(collection(db, "orders"));
+        if(snap.empty) {
+          ordersBody.innerHTML = "<tr><td colspan='5'>Abhi tak koi order nahi aaya hai.</td></tr>";
+          return;
+        }
+        ordersBody.innerHTML = '';
+        snap.forEach((docSnap) => {
+          const order = docSnap.data();
+          const id = docSnap.id;
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td><strong>${id}</strong></td>
+            <td>${order.customerName}</td>
+            <td>${order.phone}<br><small>${order.address}</small></td>
+            <td>₹${order.totalAmount}</td>
+            <td>
+              <select class="status-select" onchange="updateOrderStatus('${id}', this.value)">
+                <option value="Pending" ${order.orderStatus === 'Pending' ? 'selected' : ''}>Pending</option>
+                <option value="Dispatched" ${order.orderStatus === 'Dispatched' ? 'selected' : ''}>Dispatched</option>
+                <option value="Delivered" ${order.orderStatus === 'Delivered' ? 'selected' : ''}>Delivered</option>
+              </select>
+            </td>
+          `;
+          ordersBody.appendChild(tr);
+        });
+      } catch(e) {
+        ordersBody.innerHTML = `<tr><td colspan='5' style='color:red;'>Error: ${e.message}</td></tr>`;
       }
     }
 
     fetchProducts();
+    fetchOrders();
 
-    // Add Product
+    // Publish New Product
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       msg.style.color = "blue";
-      msg.innerText = "Saving product...";
+      msg.innerText = "Product save ho raha hai...";
 
       const newProduct = {
         title: document.getElementById('p-title').value,
@@ -174,7 +241,7 @@
       try {
         await addDoc(collection(db, "products"), newProduct);
         msg.style.color = "green";
-        msg.innerText = "Product successfully listed!";
+        msg.innerText = "Product Admin Panel se successfully live kar diya gaya!";
         form.reset();
         fetchProducts();
       } catch(err) {
@@ -183,11 +250,18 @@
       }
     });
 
+    // Delete Product
     window.removeProduct = async function(id) {
       if(confirm("Kya aap is product ko delete karna chahte hain?")) {
         await deleteDoc(doc(db, "products", id));
         fetchProducts();
       }
+    };
+
+    // Update Order Status
+    window.updateOrderStatus = async function(id, newStatus) {
+      await updateDoc(doc(db, "orders", id), { orderStatus: newStatus });
+      alert("Order Status updated to " + newStatus);
     };
   </script>
 </body>
