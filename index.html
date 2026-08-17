@@ -1,74 +1,377 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>PINAKI - Pure Homemade Delights</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PINAKI - Online Store</title>
+  
+  <style>
+    :root {
+      --primary: #d97706;
+      --primary-hover: #b45309;
+      --bg-color: #f8fafc;
+      --card-bg: #ffffff;
+      --text-main: #1e293b;
+      --text-muted: #64748b;
+      --border-color: #e2e8f0;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* Header & Navigation */
+    header {
+      background: #ffffff;
+      border-bottom: 1px solid var(--border-color);
+      padding: 1rem 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    }
+
+    .navbar {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--primary);
+      text-decoration: none;
+      letter-spacing: 1px;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--text-main);
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: color 0.2s ease;
+    }
+
+    .nav-links a:hover {
+      color: var(--primary);
+    }
+
+    .btn-nav-auth {
+      background: var(--primary);
+      color: white !important;
+      padding: 0.45rem 1rem;
+      border-radius: 6px;
+      transition: background 0.2s ease !important;
+    }
+
+    .btn-nav-auth:hover {
+      background: var(--primary-hover) !important;
+    }
+
+    .btn-admin {
+      background: #2563eb;
+      color: white !important;
+      padding: 0.45rem 1rem;
+      border-radius: 6px;
+    }
+
+    /* Hero Banner Section */
+    .hero {
+      background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+      padding: 3.5rem 1.5rem;
+      text-align: center;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .hero h1 {
+      font-size: 2.2rem;
+      color: #78350f;
+      margin-bottom: 0.8rem;
+    }
+
+    .hero p {
+      color: #92400e;
+      font-size: 1.1rem;
+      max-width: 600px;
+      margin: 0 auto 1.5rem auto;
+    }
+
+    .hero-btn {
+      display: inline-block;
+      background: var(--primary);
+      color: white;
+      padding: 0.75rem 1.8rem;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 700;
+      box-shadow: 0 4px 10px rgba(217, 119, 6, 0.3);
+    }
+
+    /* Main Container & Product Grid */
+    .container {
+      max-width: 1200px;
+      margin: 2.5rem auto;
+      padding: 0 1.5rem;
+      flex: 1;
+      width: 100%;
+    }
+
+    .section-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      border-left: 4px solid var(--primary);
+      padding-left: 0.8rem;
+    }
+
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 1.8rem;
+    }
+
+    /* Product Card Styling */
+    .product-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .product-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.06);
+    }
+
+    .product-img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      background: #f1f5f9;
+    }
+
+    .product-info {
+      padding: 1.2rem;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    .product-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: var(--text-main);
+    }
+
+    .product-price {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: var(--primary);
+      margin-bottom: 1rem;
+    }
+
+    .product-price .original-price {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      text-decoration: line-through;
+      margin-left: 0.5rem;
+      font-weight: normal;
+    }
+
+    .btn-add-cart {
+      margin-top: auto;
+      width: 100%;
+      padding: 0.65rem;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    .btn-add-cart:hover {
+      background: var(--primary-hover);
+    }
+
+    /* Footer */
+    footer {
+      background: #ffffff;
+      border-top: 1px solid var(--border-color);
+      text-align: center;
+      padding: 1.5rem;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-top: 3rem;
+    }
+  </style>
 </head>
 <body>
 
+  <!-- Navigation Bar -->
   <header>
     <nav class="navbar">
       <a href="index.html" class="logo">PINAKI</a>
+      
       <div class="nav-links">
         <a href="index.html">Home</a>
-        <a href="products.html">All Products</a>
-        <a href="cart.html" class="cart-btn">🛒 Cart (<span id="cart-count">0</span>)</a>
+        <a href="products.html">Products</a>
+        <a href="cart.html">🛒 Cart (<span id="cart-count">0</span>)</a>
+        
+        <!-- Auth Links Dynamic State -->
+        <a href="auth.html" id="nav-login-btn" class="btn-nav-auth">Login / Signup</a>
+        <a href="user-panel.html" id="nav-user-panel" style="display: none;">My Orders</a>
+        <a href="admin-panel.html" id="nav-admin-panel" class="btn-admin" style="display: none;">Admin Panel</a>
+        <button id="nav-logout-btn" style="display: none; background: none; border: none; color: #dc2626; font-weight: 600; cursor: pointer;">Logout</button>
       </div>
     </nav>
   </header>
 
+  <!-- Hero Section -->
   <section class="hero">
-    <h1>100% Pure Homemade Ghee, Achar & Oils</h1>
-    <p>Traditional family recipes prepared naturally with zero chemicals.</p>
-    <br>
-    <a href="products.html" class="btn-main">Explore Store</a>
+    <h1>Welcome to PINAKI Store</h1>
+    <p>Best quality products at unbeatable prices. Shop your favorites now!</p>
+    <a href="products.html" class="hero-btn">Explore All Products</a>
   </section>
 
+  <!-- Featured Products Section -->
   <main class="container">
-    <h2 style="text-align: center;">Featured Products</h2>
-    <div class="product-grid" id="featured-list"></div>
+    <h2 class="section-title">Featured Products</h2>
+    
+    <div class="products-grid" id="products-container">
+      <p style="grid-column: 1/-1; text-align: center; color: var(--text-muted);">Products load ho rahe hain...</p>
+    </div>
   </main>
 
+  <!-- Footer -->
   <footer>
-    <p>&copy; 2026 PINAKI Homemade Products. All rights reserved.</p>
+    <p>&copy; 2026 PINAKI Store. All Rights Reserved.</p>
   </footer>
 
-  <script>
-    const products = [
-      { id: 1, name: "Pure Desi A2 Cow Ghee", price: 650, weight: "500ml", image: "https://images.unsplash.com/photo-1589927986076-2d1f133d3ef4?auto=format&fit=crop&w=500&q=80" },
-      { id: 2, name: "Homemade Mango Achar", price: 250, weight: "500g", image: "https://images.unsplash.com/photo-1599940824399-b87987ceb72a?auto=format&fit=crop&w=500&q=80" },
-      { id: 3, name: "Cold-Pressed Mustard Oil", price: 220, weight: "1 Litre", image: "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?auto=format&fit=crop&w=500&q=80" }
-    ];
+  <!-- Firebase & Dynamic App Logic -->
+  <script type="module">
+    import { auth, db } from './firebase-config.js';
+    import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { collection, getDocs, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-    function updateCartCount() {
-      let cart = JSON.parse(localStorage.getItem('pinaki_cart')) || [];
-      document.getElementById('cart-count').innerText = cart.length;
-    }
+    // 1. Auth State Checker (Navbar update)
+    onAuthStateChanged(auth, async (user) => {
+      const loginBtn = document.getElementById('nav-login-btn');
+      const userPanelBtn = document.getElementById('nav-user-panel');
+      const adminPanelBtn = document.getElementById('nav-admin-panel');
+      const logoutBtn = document.getElementById('nav-logout-btn');
 
-    const container = document.getElementById('featured-list');
-    products.forEach(p => {
-      container.innerHTML += `
-        <div class="product-card">
-          <img src="${p.image}" alt="${p.name}">
-          <h3>${p.name}</h3>
-          <div class="price">₹${p.price} / ${p.weight}</div>
-          <button class="add-btn" onclick="addToCart(${p.id})">Add to Cart</button>
-        </div>
-      `;
+      if (user) {
+        if (loginBtn) loginBtn.style.display = 'none';
+        if (logoutBtn) logoutBtn.style.display = 'inline-block';
+
+        try {
+          const userDoc = await getDoc(doc(db, "users", user.uid));
+          if (userDoc.exists() && userDoc.data().role === "admin") {
+            if (adminPanelBtn) adminPanelBtn.style.display = 'inline-block';
+          } else {
+            if (userPanelBtn) userPanelBtn.style.display = 'inline-block';
+          }
+        } catch (e) {
+          console.error("User role fetch error:", e);
+        }
+      } else {
+        if (loginBtn) loginBtn.style.display = 'inline-block';
+        if (userPanelBtn) userPanelBtn.style.display = 'none';
+        if (adminPanelBtn) adminPanelBtn.style.display = 'none';
+        if (logoutBtn) logoutBtn.style.display = 'none';
+      }
     });
 
-    function addToCart(id) {
-      let cart = JSON.parse(localStorage.getItem('pinaki_cart')) || [];
-      const item = products.find(p => p.id === id);
-      cart.push(item);
-      localStorage.setItem('pinaki_cart', JSON.stringify(cart));
-      updateCartCount();
-      alert(`${item.name} added to cart!`);
+    // Logout Action
+    document.getElementById('nav-logout-btn').addEventListener('click', () => {
+      signOut(auth).then(() => {
+        window.location.reload();
+      });
+    });
+
+    // 2. Fetch Products from Firestore
+    async function loadFeaturedProducts() {
+      const container = document.getElementById('products-container');
+      try {
+        const querySnapshot = await getDocs(collection(db, "products"));
+        
+        if (querySnapshot.empty) {
+          container.innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: var(--text-muted);">Abhi koi products available nahi hain. Admin panel se add karein!</p>`;
+          return;
+        }
+
+        container.innerHTML = ''; // Clear loading text
+
+        querySnapshot.forEach((docSnap) => {
+          const item = docSnap.data();
+          const pId = docSnap.id;
+
+          const card = document.createElement('div');
+          card.className = 'product-card';
+          card.innerHTML = `
+            <img src="${item.imageUrl || 'https://via.placeholder.com/200'}" alt="${item.title}" class="product-img">
+            <div class="product-info">
+              <h3 class="product-title">${item.title}</h3>
+              <div class="product-price">
+                ₹${item.price}
+                ${item.oldPrice ? `<span class="original-price">₹${item.oldPrice}</span>` : ''}
+              </div>
+              <button class="btn-add-cart" onclick="addToCart('${pId}', '${item.title}', ${item.price}, '${item.imageUrl || ''}')">Add to Cart</button>
+            </div>
+          `;
+          container.appendChild(card);
+        });
+
+      } catch (error) {
+        console.error("Error loading products:", error);
+        container.innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: red;">Products load karne me error aaya: ${error.message}</p>`;
+      }
     }
 
+    // Initialize Products
+    loadFeaturedProducts();
+
+    // Cart Count Management
+    function updateCartCount() {
+      const cart = JSON.parse(localStorage.getItem('pinaki_cart')) || [];
+      document.getElementById('cart-count').innerText = cart.length;
+    }
     updateCartCount();
+
+    // Global Add to Cart function
+    window.addToCart = function(id, title, price, imageUrl) {
+      let cart = JSON.parse(localStorage.getItem('pinaki_cart')) || [];
+      cart.push({ id, title, price, imageUrl, quantity: 1 });
+      localStorage.setItem('pinaki_cart', JSON.stringify(cart));
+      updateCartCount();
+      alert(`${title} Cart me add ho gaya hai!`);
+    };
   </script>
 </body>
 </html>
