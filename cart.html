@@ -1,10 +1,38 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Shopping Cart - PINAKI</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Cart - PINAKI</title>
+  
+  <style>
+    :root {
+      --primary: #d97706;
+      --bg-color: #f8fafc;
+      --card-bg: #ffffff;
+      --text-main: #1e293b;
+      --border-color: #e2e8f0;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background-color: var(--bg-color); color: var(--text-main); display: flex; flex-direction: column; min-height: 100vh; }
+
+    header { background: #ffffff; border-bottom: 1px solid var(--border-color); padding: 1rem 2rem; }
+    .navbar { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+    .logo { font-size: 1.6rem; font-weight: 800; color: var(--primary); text-decoration: none; }
+    .nav-links a { text-decoration: none; color: var(--text-main); font-weight: 600; margin-left: 1.2rem; }
+
+    .container { max-width: 900px; margin: 2rem auto; padding: 0 1.5rem; flex: 1; width: 100%; }
+    .cart-item { display: flex; align-items: center; justify-content: space-between; background: white; padding: 1rem; border-radius: 8px; border: 1px solid var(--border-color); margin-bottom: 1rem; }
+    .cart-item img { width: 60px; height: 60px; object-fit: cover; border-radius: 6px; }
+
+    .checkout-box { background: white; padding: 1.5rem; border-radius: 8px; border: 1px solid var(--border-color); margin-top: 2rem; }
+    .form-group { margin-bottom: 1rem; }
+    .form-group label { display: block; font-weight: 600; margin-bottom: 0.3rem; }
+    .form-group input, .form-group textarea { width: 100%; padding: 0.7rem; border: 1px solid var(--border-color); border-radius: 6px; }
+
+    .btn-place-order { width: 100%; padding: 0.8rem; background: var(--primary); color: white; border: none; border-radius: 6px; font-weight: 700; cursor: pointer; font-size: 1rem; }
+  </style>
 </head>
 <body>
 
@@ -13,69 +41,114 @@
       <a href="index.html" class="logo">PINAKI</a>
       <div class="nav-links">
         <a href="index.html">Home</a>
-        <a href="products.html">All Products</a>
-        <a href="cart.html" class="cart-btn">🛒 Cart (<span id="cart-count">0</span>)</a>
+        <a href="products.html">Products</a>
       </div>
     </nav>
   </header>
 
   <main class="container">
-    <h2 style="text-align: center; margin-bottom: 2rem;">Your Cart</h2>
-    <div id="cart-items" style="max-width: 600px; margin: 0 auto;"></div>
-    <div id="cart-total" style="max-width: 600px; margin: 1.5rem auto; text-align: right; font-size: 1.3rem; font-weight: bold;"></div>
-    <div style="text-align: center; margin-top: 2rem;">
-      <a href="checkout.html" class="btn-main" id="checkout-btn" style="display: none;">Proceed to Checkout</a>
+    <h2>Shopping Cart</h2>
+    <div id="cart-list" style="margin-top: 1.5rem;"></div>
+
+    <div class="checkout-box">
+      <h3>Shipping & Order Details</h3>
+      <div class="form-group" style="margin-top: 1rem;">
+        <label>Full Name</label>
+        <input type="text" id="cust-name" placeholder="Apna pura naam daalein" required>
+      </div>
+      <div class="form-group">
+        <label>Mobile Number</label>
+        <input type="tel" id="cust-phone" placeholder="10-digit mobile number" required>
+      </div>
+      <div class="form-group">
+        <label>Delivery Address</label>
+        <textarea id="cust-address" rows="3" placeholder="Pura pata likhein..." required></textarea>
+      </div>
+      
+      <h4>Total Amount: ₹<span id="grand-total">0</span></h4>
+      <br>
+      <button class="btn-place-order" id="btn-submit-order">Place Order (Cash on Delivery)</button>
+      <p id="order-status" style="margin-top: 1rem; text-align: center; font-weight: bold;"></p>
     </div>
   </main>
 
-  <footer>
-    <p>&copy; 2026 PINAKI Homemade Products. All rights reserved.</p>
-  </footer>
+  <script type="module">
+    import { db, auth } from './firebase-config.js';
+    import { collection, addDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-  <script>
     function renderCart() {
-      let cart = JSON.parse(localStorage.getItem('pinaki_cart')) || [];
-      document.getElementById('cart-count').innerText = cart.length;
-      
-      const container = document.getElementById('cart-items');
-      const totalDiv = document.getElementById('cart-total');
-      const checkoutBtn = document.getElementById('checkout-btn');
+      const cartList = document.getElementById('cart-list');
+      const cart = JSON.parse(localStorage.getItem('pinaki_cart')) || [];
+      let total = 0;
 
       if (cart.length === 0) {
-        container.innerHTML = "<p style='text-align:center;'>Your cart is empty.</p>";
-        totalDiv.innerHTML = "";
-        checkoutBtn.style.display = "none";
+        cartList.innerHTML = "<p>Aapka cart khali hai.</p>";
+        document.getElementById('grand-total').innerText = "0";
         return;
       }
 
-      container.innerHTML = "";
-      let total = 0;
-
+      cartList.innerHTML = '';
       cart.forEach((item, index) => {
-        total += item.price;
-        container.innerHTML += `
-          <div style="background: white; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center;">
-            <div>
-              <strong>${item.name}</strong> (${item.weight})
-              <div style="color: var(--primary); font-weight: bold;">₹${item.price}</div>
-            </div>
-            <button onclick="removeItem(${index})" style="background: red; color: white; border: none; padding: 0.3rem 0.8rem; border-radius: 5px; cursor: pointer;">Remove</button>
+        total += Number(item.price);
+        const div = document.createElement('div');
+        div.className = 'cart-item';
+        div.innerHTML = `
+          <img src="${item.imageUrl || 'https://via.placeholder.com/60'}">
+          <div>
+            <strong>${item.title}</strong>
+            <p>₹${item.price}</p>
           </div>
+          <button onclick="removeItem(${index})" style="background: red; color: white; border: none; padding: 0.4rem 0.7rem; border-radius: 4px; cursor: pointer;">Remove</button>
         `;
+        cartList.appendChild(div);
       });
 
-      totalDiv.innerText = `Total: ₹${total}`;
-      checkoutBtn.style.display = "inline-block";
+      document.getElementById('grand-total').innerText = total;
     }
 
-    function removeItem(index) {
+    window.removeItem = function(index) {
       let cart = JSON.parse(localStorage.getItem('pinaki_cart')) || [];
       cart.splice(index, 1);
       localStorage.setItem('pinaki_cart', JSON.stringify(cart));
       renderCart();
-    }
+    };
 
     renderCart();
+
+    document.getElementById('btn-submit-order').addEventListener('click', async () => {
+      const cart = JSON.parse(localStorage.getItem('pinaki_cart')) || [];
+      const name = document.getElementById('cust-name').value.trim();
+      const phone = document.getElementById('cust-phone').value.trim();
+      const address = document.getElementById('cust-address').value.trim();
+      const status = document.getElementById('order-status');
+
+      if (cart.length === 0) { alert("Cart me koi product nahi hai!"); return; }
+      if (!name || !phone || !address) { alert("Sahi delivery detail bharein!"); return; }
+
+      status.innerText = "Order process ho raha hai...";
+
+      try {
+        const user = auth.currentUser;
+        await addDoc(collection(db, "orders"), {
+          userId: user ? user.uid : "guest",
+          customerName: name,
+          phone: phone,
+          address: address,
+          items: cart,
+          totalAmount: document.getElementById('grand-total').innerText,
+          orderStatus: "Pending",
+          createdAt: new Date().toISOString()
+        });
+
+        localStorage.removeItem('pinaki_cart');
+        status.style.color = "green";
+        status.innerText = "Order Successfully Place Ho Gaya!";
+        setTimeout(() => window.location.href = "user-panel.html", 1500);
+      } catch (err) {
+        status.style.color = "red";
+        status.innerText = "Error: " + err.message;
+      }
+    });
   </script>
 </body>
 </html>
