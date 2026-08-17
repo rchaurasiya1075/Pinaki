@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login / Signup - PINAKI</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container" style="max-width: 400px; margin-top: 5rem;">
+    <div style="background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+      <h2 style="text-align: center; margin-bottom: 1.5rem;" id="form-title">Login to PINAKI</h2>
+      
+      <div class="form-group">
+        <label>Email Address</label>
+        <input type="email" id="email" placeholder="example@gmail.com" required>
+      </div>
+      
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="password" placeholder="••••••••" required>
+      </div>
+
+      <button class="btn-main" style="width: 100%; margin-top: 1rem;" id="submit-btn">Login</button>
+      <p style="text-align: center; margin-top: 1rem; font-size: 0.9rem;">
+        <a href="#" id="toggle-auth">Need an account? Sign Up</a>
+      </p>
+    </div>
+  </div>
+
+  <script type="module">
+    import { auth, db } from './firebase-config.js';
+    import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    let isSignup = false;
+
+    document.getElementById('toggle-auth').addEventListener('click', (e) => {
+      e.preventDefault();
+      isSignup = !isSignup;
+      document.getElementById('form-title').innerText = isSignup ? "Create Account" : "Login to PINAKI";
+      document.getElementById('submit-btn').innerText = isSignup ? "Sign Up" : "Login";
+      document.getElementById('toggle-auth').innerText = isSignup ? "Already have an account? Login" : "Need an account? Sign Up";
+    });
+
+    document.getElementById('submit-btn').addEventListener('click', async () => {
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+
+      try {
+        if (isSignup) {
+          const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+          // Default user role save
+          await setDoc(doc(db, "users", userCredential.user.uid), {
+            email: email,
+            role: "user",
+            createdAt: new Date().toISOString()
+          });
+          alert("Account created successfully!");
+          window.location.href = "user-panel.html";
+        } else {
+          const userCredential = await signInWithEmailAndPassword(auth, email, password);
+          const userDoc = await getDoc(doc(db, "users", userCredential.user.uid));
+          
+          if (userDoc.exists() && userDoc.data().role === "admin") {
+            window.location.href = "admin-panel.html";
+          } else {
+            window.location.href = "user-panel.html";
+          }
+        }
+      } catch (error) {
+        alert("Authentication Error: " + error.message);
+      }
+    });
+  </script>
+</body>
+</html>
