@@ -34,7 +34,7 @@
         body {
             background-color: var(--bg-main);
             color: var(--text-dark);
-            padding-bottom: 70px; /* Space for mobile nav */
+            padding-bottom: 70px; /* Space for mobile bottom bar */
         }
 
         @media (min-width: 769px) {
@@ -46,8 +46,8 @@
             background-color: var(--brand-primary);
             color: var(--white);
             text-align: center;
-            padding: 8px 12px;
-            font-size: 13px;
+            padding: 6px 12px;
+            font-size: 12px;
             font-weight: 500;
         }
 
@@ -63,16 +63,16 @@
         .header-container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 12px 20px;
+            padding: 12px 16px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 15px;
+            gap: 12px;
         }
 
         .logo {
             font-family: 'Playfair Display', serif;
-            font-size: 26px;
+            font-size: 24px;
             font-weight: 700;
             color: var(--brand-primary);
             text-decoration: none;
@@ -83,6 +83,7 @@
             color: var(--brand-secondary);
         }
 
+        /* Desktop Nav Links */
         .nav-links {
             display: flex;
             gap: 24px;
@@ -104,7 +105,7 @@
         .header-actions {
             display: flex;
             align-items: center;
-            gap: 16px;
+            gap: 14px;
         }
 
         .icon-btn {
@@ -130,6 +131,95 @@
             display: flex;
             align-items: center;
             justify-content: center;
+        }
+
+        /* Mobile Hamburger Icon */
+        .menu-toggle-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 22px;
+            color: var(--text-dark);
+            cursor: pointer;
+        }
+
+        /* Mobile Menu Drawer Overlay */
+        .mobile-drawer-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .mobile-drawer-overlay.active {
+            display: block;
+            opacity: 1;
+        }
+
+        .mobile-drawer {
+            position: fixed;
+            top: 0;
+            left: -280px;
+            width: 280px;
+            height: 100%;
+            background: var(--white);
+            z-index: 2001;
+            padding: 20px;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+            transition: left 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .mobile-drawer.active {
+            left: 0;
+        }
+
+        .drawer-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .close-drawer-btn {
+            background: none;
+            border: none;
+            font-size: 22px;
+            color: var(--text-dark);
+            cursor: pointer;
+        }
+
+        .drawer-menu-list {
+            list-style: none;
+            margin-top: 20px;
+        }
+
+        .drawer-menu-list li {
+            margin-bottom: 18px;
+        }
+
+        .drawer-menu-list a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 500;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .drawer-menu-list a i {
+            color: var(--brand-secondary);
+            width: 20px;
         }
 
         /* Hero Banner Section */
@@ -179,36 +269,36 @@
             background-color: var(--brand-primary);
         }
 
-        /* Purity Badges Bar */
+        /* Trust Badges Bar */
         .trust-bar {
             max-width: 1200px;
             margin: 0 auto 30px;
-            padding: 0 20px;
+            padding: 0 16px;
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
+            gap: 12px;
         }
 
         @media (min-width: 769px) {
-            .trust-bar { grid-template-columns: repeat(4, 1fr); }
+            .trust-bar { grid-template-columns: repeat(4, 1fr); gap: 15px; }
         }
 
         .trust-item {
             background: var(--white);
-            padding: 16px;
+            padding: 14px;
             border-radius: var(--radius-md);
             text-align: center;
             box-shadow: var(--shadow-sm);
         }
 
         .trust-item i {
-            font-size: 24px;
+            font-size: 22px;
             color: var(--brand-secondary);
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
 
         .trust-item h4 {
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 600;
         }
 
@@ -216,35 +306,39 @@
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 0 20px 40px;
+            padding: 0 16px 40px;
         }
 
         .section-title {
             text-align: center;
-            margin-bottom: 24px;
+            margin-bottom: 20px;
         }
 
         .section-title h2 {
             font-family: 'Playfair Display', serif;
-            font-size: 28px;
+            font-size: 26px;
             color: var(--brand-primary);
         }
 
         .category-tabs {
             display: flex;
-            justify-content: center;
             gap: 10px;
-            margin-bottom: 24px;
+            margin-bottom: 20px;
             overflow-x: auto;
-            padding-bottom: 8px;
+            padding-bottom: 6px;
+            scrollbar-width: none;
+        }
+
+        .category-tabs::-webkit-scrollbar {
+            display: none;
         }
 
         .tab-btn {
             background: var(--white);
             border: 1px solid var(--brand-secondary);
-            padding: 8px 20px;
+            padding: 8px 16px;
             border-radius: 20px;
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 500;
             cursor: pointer;
             white-space: nowrap;
@@ -259,7 +353,7 @@
         .product-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
+            gap: 12px;
         }
 
         @media (min-width: 769px) {
@@ -269,7 +363,7 @@
         .product-card {
             background: var(--white);
             border-radius: var(--radius-md);
-            padding: 14px;
+            padding: 12px;
             box-shadow: var(--shadow-sm);
             display: flex;
             flex-direction: column;
@@ -284,17 +378,17 @@
 
         .product-img {
             width: 100%;
-            height: 160px;
+            height: 140px;
             object-fit: cover;
             border-radius: 8px;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
         }
 
         .badge-pure {
             font-size: 10px;
             background: var(--brand-light);
             color: var(--brand-primary);
-            padding: 3px 8px;
+            padding: 3px 6px;
             border-radius: 4px;
             font-weight: 600;
             width: fit-content;
@@ -302,28 +396,29 @@
         }
 
         .product-card h3 {
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 600;
             margin-bottom: 6px;
-            height: 38px;
+            height: 36px;
             overflow: hidden;
+            line-height: 1.3;
         }
 
         .price-box {
             display: flex;
             align-items: baseline;
-            gap: 8px;
-            margin-bottom: 12px;
+            gap: 6px;
+            margin-bottom: 10px;
         }
 
-        .price { font-size: 16px; font-weight: 700; color: var(--brand-primary); }
-        .weight { font-size: 12px; color: var(--text-muted); }
+        .price { font-size: 15px; font-weight: 700; color: var(--brand-primary); }
+        .weight { font-size: 11px; color: var(--text-muted); }
 
         .btn-add {
             background: var(--brand-primary);
             color: var(--white);
             border: none;
-            padding: 10px;
+            padding: 8px;
             border-radius: 6px;
             font-weight: 600;
             font-size: 12px;
@@ -331,7 +426,7 @@
             width: 100%;
         }
 
-        /* Mobile Nav */
+        /* Mobile Bottom Navigation Bar */
         .mobile-nav {
             position: fixed;
             bottom: 0;
@@ -340,19 +435,9 @@
             background: var(--white);
             display: flex;
             justify-content: space-around;
-            padding: 10px 0;
+            padding: 8px 0;
             box-shadow: 0 -2px 10px rgba(0,0,0,0.08);
             z-index: 1000;
-        }
-
-        @media (min-width: 769px) {
-            .mobile-nav { display: none; }
-            .nav-links { display: flex; }
-        }
-
-        @media (max-width: 768px) {
-            .nav-links { display: none; }
-            .hero-content h1 { font-size: 26px; }
         }
 
         .mobile-item {
@@ -364,32 +449,55 @@
             font-size: 10px;
             background: none;
             border: none;
+            cursor: pointer;
         }
 
-        .mobile-item i { font-size: 18px; margin-bottom: 3px; }
-        .mobile-item.active { color: var(--brand-primary); }
+        .mobile-item i { font-size: 18px; margin-bottom: 2px; }
+        .mobile-item.active { color: var(--brand-primary); font-weight: 600; }
+
+        /* Responsive Visibility Controls */
+        @media (max-width: 768px) {
+            .nav-links { display: none; } /* Hide horizontal menu on mobile */
+            .menu-toggle-btn { display: block; } /* Show hamburger button */
+            .hero { height: 300px; }
+            .hero-content h1 { font-size: 24px; }
+            .hero-content p { font-size: 13px; }
+        }
+
+        @media (min-width: 769px) {
+            .mobile-nav { display: none; }
+            .menu-toggle-btn { display: none; }
+        }
     </style>
 </head>
 <body>
 
     <!-- Top Announcement Bar -->
     <div class="top-bar">
-        🌿 100% Pure & Organic Homemade Products | Free Shipping on Orders Above ₹499
+        🌿 100% Pure & Organic Homemade Products | Free Shipping Above ₹499
     </div>
 
     <!-- Main Header -->
     <header>
         <div class="header-container">
-            <a href="#" class="logo">PINAKI <span>Farms</span></a>
+            <!-- Left: Menu Drawer Toggle for Mobile -->
+            <button class="menu-toggle-btn" onclick="toggleMobileDrawer()">
+                <i class="fa-solid fa-bars"></i>
+            </button>
 
+            <!-- Center/Left: Brand Logo -->
+            <a href="index.html" class="logo">PINAKI <span>Farms</span></a>
+
+            <!-- Center: Desktop Navigation Links -->
             <ul class="nav-links">
-                <li><a href="#">Home</a></li>
-                <li><a href="#">Achar (Pickles)</a></li>
-                <li><a href="#">Desi Ghee</a></li>
-                <li><a href="#">Cold Pressed Oils</a></li>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="#products">Achar (Pickles)</a></li>
+                <li><a href="#products">Desi Ghee</a></li>
+                <li><a href="#products">Cold Pressed Oils</a></li>
                 <li><a href="#">Our Story</a></li>
             </ul>
 
+            <!-- Right: Actions -->
             <div class="header-actions">
                 <button class="icon-btn" onclick="openAuthModal()"><i class="fa-regular fa-user"></i></button>
                 <a href="cart.html" class="icon-btn">
@@ -400,11 +508,35 @@
         </div>
     </header>
 
+    <!-- Mobile Navigation Drawer -->
+    <div class="mobile-drawer-overlay" id="drawerOverlay" onclick="toggleMobileDrawer()"></div>
+    <div class="mobile-drawer" id="mobileDrawer">
+        <div>
+            <div class="drawer-header">
+                <a href="index.html" class="logo">PINAKI <span>Farms</span></a>
+                <button class="close-drawer-btn" onclick="toggleMobileDrawer()">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <ul class="drawer-menu-list">
+                <li><a href="index.html"><i class="fa-solid fa-house"></i> Home</a></li>
+                <li><a href="#products" onclick="toggleMobileDrawer()"><i class="fa-solid fa-jar"></i> Achar (Pickles)</a></li>
+                <li><a href="#products" onclick="toggleMobileDrawer()"><i class="fa-solid fa-bucket"></i> Desi Ghee</a></li>
+                <li><a href="#products" onclick="toggleMobileDrawer()"><i class="fa-solid fa-bottle-droplet"></i> Cold Pressed Oils</a></li>
+                <li><a href="#"><i class="fa-solid fa-book-open"></i> Our Story</a></li>
+                <li><a href="cart.html"><i class="fa-solid fa-bag-shopping"></i> My Orders</a></li>
+            </ul>
+        </div>
+        <div style="font-size: 12px; color: var(--text-muted); text-align: center;">
+            FSSAI Lic. No: 12345678901234
+        </div>
+    </div>
+
     <!-- Hero Banner -->
     <section class="hero">
         <div class="hero-content">
             <h1>Ghar Ka Swaad, Shuddhata Ke Saath</h1>
-            <p>Traditional Bilona Ghee, Handcrafted Mango & Chilli Pickles, and Pure Cold Pressed Oils made with love.</p>
+            <p>Traditional Bilona Ghee, Handcrafted Pickles, and Pure Cold Pressed Oils.</p>
             <a href="#products" class="btn-primary">Explore Products</a>
         </div>
     </section>
@@ -443,7 +575,6 @@
         </div>
 
         <div class="product-grid" id="productGrid">
-            <!-- Sample Homemade Product Cards -->
             <div class="product-card">
                 <span class="badge-pure">Mustard Oil Base</span>
                 <img src="https://images.unsplash.com/photo-1589301760014-d929f3979dbc?q=80&w=400" class="product-img" alt="Achar">
@@ -469,7 +600,7 @@
             <div class="product-card">
                 <span class="badge-pure">Wooden Kolhu</span>
                 <img src="https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?q=80&w=400" class="product-img" alt="Oil">
-                <h3>Cold Pressed Yellow Mustard Oil</h3>
+                <h3>Cold Pressed Mustard Oil</h3>
                 <div class="price-box">
                     <span class="price">₹240</span>
                     <span class="weight">(1 Litre)</span>
@@ -492,11 +623,11 @@
 
     <!-- Mobile Bottom Navigation Bar -->
     <div class="mobile-nav">
-        <a href="#" class="mobile-item active">
+        <a href="index.html" class="mobile-item active">
             <i class="fa-solid fa-house"></i>
             <span>Home</span>
         </a>
-        <a href="#" class="mobile-item">
+        <a href="#products" class="mobile-item">
             <i class="fa-solid fa-jar"></i>
             <span>Shop</span>
         </a>
@@ -504,11 +635,19 @@
             <i class="fa-solid fa-bag-shopping"></i>
             <span>Cart</span>
         </a>
-        <button class="mobile-item" onclick="openAuthModal()">
-            <i class="fa-regular fa-user"></i>
-            <span>Account</span>
+        <button class="mobile-item" onclick="toggleMobileDrawer()">
+            <i class="fa-solid fa-bars"></i>
+            <span>Menu</span>
         </button>
     </div>
 
+    <script>
+        function toggleMobileDrawer() {
+            const drawer = document.getElementById('mobileDrawer');
+            const overlay = document.getElementById('drawerOverlay');
+            drawer.classList.toggle('active');
+            overlay.classList.toggle('active');
+        }
+    </script>
 </body>
 </html>
