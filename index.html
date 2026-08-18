@@ -1,377 +1,197 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PINAKI - Online Store</title>
-  
-  <style>
-    :root {
-      --primary: #d97706;
-      --primary-hover: #b45309;
-      --bg-color: #f8fafc;
-      --card-bg: #ffffff;
-      --text-main: #1e293b;
-      --text-muted: #64748b;
-      --border-color: #e2e8f0;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PINAKI | Online Shopping</title>
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-
-    body {
-      background-color: var(--bg-color);
-      color: var(--text-main);
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-    }
-
-    /* Header & Navigation */
-    header {
-      background: #ffffff;
-      border-bottom: 1px solid var(--border-color);
-      padding: 1rem 2rem;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-    }
-
-    .navbar {
-      max-width: 1200px;
-      margin: 0 auto;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .logo {
-      font-size: 1.6rem;
-      font-weight: 800;
-      color: var(--primary);
-      text-decoration: none;
-      letter-spacing: 1px;
-    }
-
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 1.2rem;
-    }
-
-    .nav-links a {
-      text-decoration: none;
-      color: var(--text-main);
-      font-weight: 600;
-      font-size: 0.95rem;
-      transition: color 0.2s ease;
-    }
-
-    .nav-links a:hover {
-      color: var(--primary);
-    }
-
-    .btn-nav-auth {
-      background: var(--primary);
-      color: white !important;
-      padding: 0.45rem 1rem;
-      border-radius: 6px;
-      transition: background 0.2s ease !important;
-    }
-
-    .btn-nav-auth:hover {
-      background: var(--primary-hover) !important;
-    }
-
-    .btn-admin {
-      background: #2563eb;
-      color: white !important;
-      padding: 0.45rem 1rem;
-      border-radius: 6px;
-    }
-
-    /* Hero Banner Section */
-    .hero {
-      background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
-      padding: 3.5rem 1.5rem;
-      text-align: center;
-      border-bottom: 1px solid var(--border-color);
-    }
-
-    .hero h1 {
-      font-size: 2.2rem;
-      color: #78350f;
-      margin-bottom: 0.8rem;
-    }
-
-    .hero p {
-      color: #92400e;
-      font-size: 1.1rem;
-      max-width: 600px;
-      margin: 0 auto 1.5rem auto;
-    }
-
-    .hero-btn {
-      display: inline-block;
-      background: var(--primary);
-      color: white;
-      padding: 0.75rem 1.8rem;
-      border-radius: 8px;
-      text-decoration: none;
-      font-weight: 700;
-      box-shadow: 0 4px 10px rgba(217, 119, 6, 0.3);
-    }
-
-    /* Main Container & Product Grid */
-    .container {
-      max-width: 1200px;
-      margin: 2.5rem auto;
-      padding: 0 1.5rem;
-      flex: 1;
-      width: 100%;
-    }
-
-    .section-title {
-      font-size: 1.5rem;
-      font-weight: 700;
-      margin-bottom: 1.5rem;
-      border-left: 4px solid var(--primary);
-      padding-left: 0.8rem;
-    }
-
-    .products-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-      gap: 1.8rem;
-    }
-
-    /* Product Card Styling */
-    .product-card {
-      background: var(--card-bg);
-      border: 1px solid var(--border-color);
-      border-radius: 12px;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-
-    .product-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 10px 20px rgba(0,0,0,0.06);
-    }
-
-    .product-img {
-      width: 100%;
-      height: 200px;
-      object-fit: cover;
-      background: #f1f5f9;
-    }
-
-    .product-info {
-      padding: 1.2rem;
-      display: flex;
-      flex-direction: column;
-      flex: 1;
-    }
-
-    .product-title {
-      font-size: 1.05rem;
-      font-weight: 700;
-      margin-bottom: 0.5rem;
-      color: var(--text-main);
-    }
-
-    .product-price {
-      font-size: 1.2rem;
-      font-weight: 800;
-      color: var(--primary);
-      margin-bottom: 1rem;
-    }
-
-    .product-price .original-price {
-      font-size: 0.9rem;
-      color: var(--text-muted);
-      text-decoration: line-through;
-      margin-left: 0.5rem;
-      font-weight: normal;
-    }
-
-    .btn-add-cart {
-      margin-top: auto;
-      width: 100%;
-      padding: 0.65rem;
-      background: var(--primary);
-      color: white;
-      border: none;
-      border-radius: 6px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: background 0.2s ease;
-    }
-
-    .btn-add-cart:hover {
-      background: var(--primary-hover);
-    }
-
-    /* Footer */
-    footer {
-      background: #ffffff;
-      border-top: 1px solid var(--border-color);
-      text-align: center;
-      padding: 1.5rem;
-      color: var(--text-muted);
-      font-size: 0.9rem;
-      margin-top: 3rem;
-    }
-  </style>
+    <!-- Google Fonts & Font Awesome Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <!-- Navigation Bar -->
-  <header>
-    <nav class="navbar">
-      <a href="index.html" class="logo">PINAKI</a>
-      
-      <div class="nav-links">
-        <a href="index.html">Home</a>
-        <a href="products.html">Products</a>
-        <a href="cart.html">🛒 Cart (<span id="cart-count">0</span>)</a>
-        
-        <!-- Auth Links Dynamic State -->
-        <a href="auth.html" id="nav-login-btn" class="btn-nav-auth">Login / Signup</a>
-        <a href="user-panel.html" id="nav-user-panel" style="display: none;">My Orders</a>
-        <a href="admin-panel.html" id="nav-admin-panel" class="btn-admin" style="display: none;">Admin Panel</a>
-        <button id="nav-logout-btn" style="display: none; background: none; border: none; color: #dc2626; font-weight: 600; cursor: pointer;">Logout</button>
-      </div>
-    </nav>
-  </header>
+    <!-- MAIN NAVBAR (AMAZON STYLE DARK HEADER) -->
+    <header class="amz-header">
+        <div class="amz-nav-top">
+            <!-- Logo -->
+            <a href="index.html" class="amz-logo">
+                <span class="logo-main">PINAKI</span>
+                <span class="logo-domain">.in</span>
+            </a>
 
-  <!-- Hero Section -->
-  <section class="hero">
-    <h1>Welcome to PINAKI Store</h1>
-    <p>Best quality products at unbeatable prices. Shop your favorites now!</p>
-    <a href="products.html" class="hero-btn">Explore All Products</a>
-  </section>
-
-  <!-- Featured Products Section -->
-  <main class="container">
-    <h2 class="section-title">Featured Products</h2>
-    
-    <div class="products-grid" id="products-container">
-      <p style="grid-column: 1/-1; text-align: center; color: var(--text-muted);">Products load ho rahe hain...</p>
-    </div>
-  </main>
-
-  <!-- Footer -->
-  <footer>
-    <p>&copy; 2026 PINAKI Store. All Rights Reserved.</p>
-  </footer>
-
-  <!-- Firebase & Dynamic App Logic -->
-  <script type="module">
-    import { auth, db } from './firebase-config.js';
-    import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-    import { collection, getDocs, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-    // 1. Auth State Checker (Navbar update)
-    onAuthStateChanged(auth, async (user) => {
-      const loginBtn = document.getElementById('nav-login-btn');
-      const userPanelBtn = document.getElementById('nav-user-panel');
-      const adminPanelBtn = document.getElementById('nav-admin-panel');
-      const logoutBtn = document.getElementById('nav-logout-btn');
-
-      if (user) {
-        if (loginBtn) loginBtn.style.display = 'none';
-        if (logoutBtn) logoutBtn.style.display = 'inline-block';
-
-        try {
-          const userDoc = await getDoc(doc(db, "users", user.uid));
-          if (userDoc.exists() && userDoc.data().role === "admin") {
-            if (adminPanelBtn) adminPanelBtn.style.display = 'inline-block';
-          } else {
-            if (userPanelBtn) userPanelBtn.style.display = 'inline-block';
-          }
-        } catch (e) {
-          console.error("User role fetch error:", e);
-        }
-      } else {
-        if (loginBtn) loginBtn.style.display = 'inline-block';
-        if (userPanelBtn) userPanelBtn.style.display = 'none';
-        if (adminPanelBtn) adminPanelBtn.style.display = 'none';
-        if (logoutBtn) logoutBtn.style.display = 'none';
-      }
-    });
-
-    // Logout Action
-    document.getElementById('nav-logout-btn').addEventListener('click', () => {
-      signOut(auth).then(() => {
-        window.location.reload();
-      });
-    });
-
-    // 2. Fetch Products from Firestore
-    async function loadFeaturedProducts() {
-      const container = document.getElementById('products-container');
-      try {
-        const querySnapshot = await getDocs(collection(db, "products"));
-        
-        if (querySnapshot.empty) {
-          container.innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: var(--text-muted);">Abhi koi products available nahi hain. Admin panel se add karein!</p>`;
-          return;
-        }
-
-        container.innerHTML = ''; // Clear loading text
-
-        querySnapshot.forEach((docSnap) => {
-          const item = docSnap.data();
-          const pId = docSnap.id;
-
-          const card = document.createElement('div');
-          card.className = 'product-card';
-          card.innerHTML = `
-            <img src="${item.imageUrl || 'https://via.placeholder.com/200'}" alt="${item.title}" class="product-img">
-            <div class="product-info">
-              <h3 class="product-title">${item.title}</h3>
-              <div class="product-price">
-                ₹${item.price}
-                ${item.oldPrice ? `<span class="original-price">₹${item.oldPrice}</span>` : ''}
-              </div>
-              <button class="btn-add-cart" onclick="addToCart('${pId}', '${item.title}', ${item.price}, '${item.imageUrl || ''}')">Add to Cart</button>
+            <!-- Delivery Location -->
+            <div class="amz-nav-location">
+                <i class="fa-solid fa-location-dot loc-icon"></i>
+                <div class="loc-text">
+                    <span class="loc-line1">Delivering to Delhi 110001</span>
+                    <span class="loc-line2">Update location</span>
+                </div>
             </div>
-          `;
-          container.appendChild(card);
-        });
 
-      } catch (error) {
-        console.error("Error loading products:", error);
-        container.innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: red;">Products load karne me error aaya: ${error.message}</p>`;
-      }
-    }
+            <!-- Search Bar -->
+            <div class="amz-search-container">
+                <div class="search-category-dropdown">
+                    <span>All</span>
+                    <i class="fa-solid fa-caret-down"></i>
+                </div>
+                <input type="text" id="searchInput" placeholder="Search Pinaki.in">
+                <button class="search-btn">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+            </div>
 
-    // Initialize Products
-    loadFeaturedProducts();
+            <!-- Language Switcher -->
+            <div class="amz-nav-item nav-lang">
+                <span class="flag-icon">🇮🇳</span>
+                <span class="lang-code">EN</span>
+                <i class="fa-solid fa-caret-down"></i>
+            </div>
 
-    // Cart Count Management
-    function updateCartCount() {
-      const cart = JSON.parse(localStorage.getItem('pinaki_cart')) || [];
-      document.getElementById('cart-count').innerText = cart.length;
-    }
-    updateCartCount();
+            <!-- Account & Lists Dropdown Trigger -->
+            <div class="amz-nav-item nav-account-dropdown" id="accountDropdownTrigger">
+                <span class="nav-line1" id="navUserGreeting">Hello, sign in</span>
+                <span class="nav-line2">Account & Lists <i class="fa-solid fa-caret-down"></i></span>
 
-    // Global Add to Cart function
-    window.addToCart = function(id, title, price, imageUrl) {
-      let cart = JSON.parse(localStorage.getItem('pinaki_cart')) || [];
-      cart.push({ id, title, price, imageUrl, quantity: 1 });
-      localStorage.setItem('pinaki_cart', JSON.stringify(cart));
-      updateCartCount();
-      alert(`${title} Cart me add ho gaya hai!`);
-    };
-  </script>
+                <!-- AMAZON DROPDOWN MENU -->
+                <div class="amz-account-menu">
+                    <div class="menu-sign-section">
+                        <button class="btn-amz-signin" onclick="openAuthModal()">Sign in</button>
+                        <p class="new-cust-text">New customer? <a href="#" onclick="openAuthModal(); switchAuthMode('signup');">Start here.</a></p>
+                    </div>
+                    <div class="menu-columns">
+                        <div class="menu-col">
+                            <h4>Your Lists</h4>
+                            <ul>
+                                <li><a href="#">Create a Wish List</a></li>
+                                <li><a href="#">Wish from Any Website</a></li>
+                                <li><a href="#">Baby Wishlist</a></li>
+                                <li><a href="#">Discover Your Style</a></li>
+                                <li><a href="#">Explore Showroom</a></li>
+                            </ul>
+                        </div>
+                        <div class="menu-col">
+                            <h4>Your Account</h4>
+                            <ul>
+                                <li><a href="#">Your Account</a></li>
+                                <li><a href="cart.html">Your Orders</a></li>
+                                <li><a href="#">Your Wish List</a></li>
+                                <li><a href="#">Keep shopping for</a></li>
+                                <li><a href="#">Your Recommendations</a></li>
+                                <li><a href="admin-panel.html" id="adminPanelLink" style="display: none;">Admin Panel</a></li>
+                                <li><a href="#" id="logoutBtn" onclick="handleLogout()" style="display: none;">Sign Out</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Returns & Orders -->
+            <a href="cart.html" class="amz-nav-item nav-orders">
+                <span class="nav-line1">Returns</span>
+                <span class="nav-line2">& Orders</span>
+            </a>
+
+            <!-- Cart Icon -->
+            <a href="cart.html" class="amz-nav-item nav-cart">
+                <div class="cart-icon-wrapper">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                    <span class="cart-count" id="cartCount">0</span>
+                </div>
+                <span class="cart-text">Cart</span>
+            </a>
+        </div>
+
+        <!-- SUB-NAVIGATION STRIP -->
+        <nav class="amz-sub-nav">
+            <a href="#" class="sub-nav-item nav-all-btn"><i class="fa-solid fa-bars"></i> All</a>
+            <a href="#" class="sub-nav-item">Fresh</a>
+            <a href="#" class="sub-nav-item">Prime Video</a>
+            <a href="#" class="sub-nav-item">Sell</a>
+            <a href="#" class="sub-nav-item">Bestsellers</a>
+            <a href="#" class="sub-nav-item">Today's Deals</a>
+            <a href="#" class="sub-nav-item">Customer Service</a>
+            <a href="#" class="sub-nav-item">Mobiles</a>
+            <a href="#" class="sub-nav-item active-link">New Releases</a>
+            <a href="#" class="sub-nav-item">Prime</a>
+            <a href="#" class="sub-nav-item">Amazon Pay</a>
+            <a href="#" class="sub-nav-item">Electronics</a>
+            <a href="#" class="sub-nav-item">Home & Kitchen</a>
+            <a href="#" class="sub-nav-item">Fashion</a>
+        </nav>
+    </header>
+
+    <!-- MAIN PRODUCT CONTENT -->
+    <main class="main-container">
+        <div class="section-title-bar">
+            <div>
+                <h3>Deals of the Day</h3>
+                <p class="sub-title">Handpicked selections for you</p>
+            </div>
+            <a href="products.html" class="view-all-link">View All <i class="fa-solid fa-chevron-right"></i></a>
+        </div>
+
+        <div class="product-grid" id="productGrid">
+            <div class="loading-spinner"><i class="fa-solid fa-circle-notch fa-spin"></i> Loading Products...</div>
+        </div>
+    </main>
+
+    <!-- MOBILE BOTTOM NAVIGATION -->
+    <div class="mobile-bottom-nav">
+        <a href="index.html" class="bottom-nav-item active">
+            <i class="fa-solid fa-house"></i>
+            <span>Home</span>
+        </a>
+        <a href="products.html" class="bottom-nav-item">
+            <i class="fa-solid fa-layer-group"></i>
+            <span>Categories</span>
+        </a>
+        <a href="cart.html" class="bottom-nav-item">
+            <div class="cart-icon-wrapper">
+                <i class="fa-solid fa-cart-shopping"></i>
+                <span class="cart-badge" id="mobileCartCount">0</span>
+            </div>
+            <span>Cart</span>
+        </a>
+        <button class="bottom-nav-item btn-reset" onclick="handleMobileProfileClick()">
+            <i class="fa-regular fa-user" id="mobileUserIcon"></i>
+            <span id="mobileUserLabel">Account</span>
+        </button>
+    </div>
+
+    <!-- AUTH MODAL -->
+    <div class="auth-modal-overlay" id="authModal">
+        <div class="auth-modal-card">
+            <button class="close-modal-btn" onclick="closeAuthModal()"><i class="fa-solid fa-xmark"></i></button>
+            <div class="auth-header">
+                <h3 id="authTitle">Welcome Back</h3>
+                <p id="authSubtitle">Log in to manage orders & profile</p>
+            </div>
+            <div class="auth-tabs">
+                <button class="auth-tab active" id="loginTabBtn" onclick="switchAuthMode('login')">Login</button>
+                <button class="auth-tab" id="signupTabBtn" onclick="switchAuthMode('signup')">Sign Up</button>
+            </div>
+            <form id="authForm" onsubmit="handleAuthSubmit(event)">
+                <div class="input-group" id="nameGroup" style="display: none;">
+                    <label>Full Name</label>
+                    <input type="text" id="authName" placeholder="Enter full name">
+                </div>
+                <div class="input-group">
+                    <label>Email Address</label>
+                    <input type="email" id="authEmail" placeholder="name@example.com" required>
+                </div>
+                <div class="input-group">
+                    <label>Password</label>
+                    <input type="password" id="authPassword" placeholder="••••••••" required>
+                </div>
+                <div class="auth-error-msg" id="authError"></div>
+                <button type="submit" class="auth-submit-btn" id="authSubmitBtn"><span>Log In</span></button>
+            </form>
+        </div>
+    </div>
+
+    <script type="module" src="firebase-config.js"></script>
+    <script type="module" src="app.js"></script>
 </body>
 </html>
