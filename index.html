@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,11 +8,493 @@
     <!-- Google Fonts & Font Awesome Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
+
+    <style>
+        /* =========================================
+           1. ROOT VARIABLES & GLOBAL RESET
+           ========================================= */
+        :root {
+            --amz-dark: #131921;
+            --amz-sub-dark: #232f3e;
+            --amz-yellow: #febd69;
+            --amz-yellow-hover: #f3a847;
+            --amz-btn-yellow: #ffd814;
+            --amz-border: #ddd;
+            --primary-blue: #2874f0;
+            --text-primary: #0f1111;
+            --text-secondary: #565959;
+            --text-link: #007185;
+            --bg-light: #eaeded;
+            --radius-sm: 6px;
+            --radius-md: 10px;
+            --shadow-sm: 0 1px 4px rgba(0,0,0,0.1);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-primary);
+            padding-bottom: 65px; /* Mobile Bottom Bar Space */
+        }
+
+        @media (min-width: 769px) {
+            body { padding-bottom: 0; }
+        }
+
+        /* =========================================
+           2. HEADER & NAVIGATION (DESKTOP & TAB)
+           ========================================= */
+        .amz-header {
+            width: 100%;
+            background-color: var(--amz-dark);
+            color: #fff;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .amz-nav-top {
+            display: flex;
+            align-items: center;
+            padding: 8px 12px;
+            gap: 12px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Logo */
+        .amz-logo {
+            text-decoration: none;
+            color: #fff;
+            padding: 4px 8px;
+            border: 1px solid transparent;
+            border-radius: 2px;
+            display: flex;
+            align-items: baseline;
+        }
+
+        .amz-logo:hover { border-color: #fff; }
+        .logo-main { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; }
+        .logo-domain { font-size: 13px; color: var(--amz-yellow); font-weight: 700; }
+
+        /* Location */
+        .amz-nav-location {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 8px;
+            border: 1px solid transparent;
+            cursor: pointer;
+        }
+        .amz-nav-location:hover { border-color: #fff; }
+        .loc-icon { font-size: 14px; margin-top: 6px; }
+        .loc-line1 { font-size: 11px; color: #ccc; display: block; }
+        .loc-line2 { font-size: 13px; font-weight: 700; display: block; }
+
+        /* Search Bar */
+        .amz-search-container {
+            flex: 1;
+            display: flex;
+            height: 40px;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .search-category-dropdown {
+            background: #f3f3f3;
+            color: #555;
+            padding: 0 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            border-right: 1px solid #ccc;
+        }
+
+        .amz-search-container input {
+            flex: 1;
+            border: none;
+            padding: 0 12px;
+            outline: none;
+            font-size: 14px;
+        }
+
+        .search-btn {
+            background-color: var(--amz-yellow);
+            border: none;
+            width: 45px;
+            font-size: 16px;
+            color: var(--amz-dark);
+            cursor: pointer;
+        }
+
+        .search-btn:hover { background-color: var(--amz-yellow-hover); }
+
+        /* Nav Items */
+        .amz-nav-item {
+            padding: 6px 8px;
+            border: 1px solid transparent;
+            color: #fff;
+            text-decoration: none;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .amz-nav-item:hover { border-color: #fff; }
+        .nav-line1 { font-size: 11px; display: block; color: #ccc; }
+        .nav-line2 { font-size: 13px; font-weight: 700; display: block; }
+
+        /* Amazon Dropdown Menu */
+        .nav-account-dropdown { position: relative; }
+
+        .amz-account-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            width: 360px;
+            background: #fff;
+            color: var(--text-primary);
+            border-radius: 4px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+            padding: 16px;
+            z-index: 2000;
+        }
+
+        .nav-account-dropdown:hover .amz-account-menu { display: block; }
+
+        .menu-sign-section {
+            text-align: center;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--amz-border);
+        }
+
+        .btn-amz-signin {
+            background: linear-gradient(to bottom, #f8e3ad, #EEA216);
+            border: 1px solid #a88734;
+            padding: 8px 32px;
+            border-radius: 3px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .menu-columns { display: flex; gap: 20px; margin-top: 12px; }
+        .menu-col { flex: 1; }
+        .menu-col h4 { font-size: 13px; margin-bottom: 8px; color: #111; }
+        .menu-col ul { list-style: none; }
+        .menu-col li { margin-bottom: 6px; }
+        .menu-col a { color: #444; font-size: 12px; text-decoration: none; }
+        .menu-col a:hover { color: #c45500; text-decoration: underline; }
+
+        /* Cart Icon */
+        .nav-cart { display: flex; align-items: center; gap: 4px; }
+        .cart-icon-wrapper { position: relative; font-size: 20px; }
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            left: 8px;
+            color: var(--amz-yellow);
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        /* Sub Navigation Strip */
+        .amz-sub-nav {
+            background-color: var(--amz-sub-dark);
+            display: flex;
+            overflow-x: auto;
+            padding: 4px 12px;
+            gap: 12px;
+            scrollbar-width: none;
+        }
+
+        .amz-sub-nav::-webkit-scrollbar { display: none; }
+
+        .sub-nav-item {
+            color: #fff;
+            text-decoration: none;
+            font-size: 12px;
+            white-space: nowrap;
+            padding: 4px 6px;
+            border: 1px solid transparent;
+        }
+
+        .sub-nav-item:hover { border-color: #fff; }
+
+        /* Responsive Desktop vs Mobile Views */
+        @media (max-width: 768px) {
+            .amz-nav-location, .nav-lang, .nav-orders, .search-category-dropdown { display: none; }
+            .amz-search-container { height: 36px; }
+            .amz-account-menu { right: -50px; width: 280px; }
+        }
+
+        /* =========================================
+           3. HERO BANNER SLIDER
+           ========================================= */
+        .hero-banner-container {
+            max-width: 1400px;
+            margin: 10px auto;
+            padding: 0 12px;
+        }
+
+        .banner-card {
+            background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            color: #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .banner-text h2 { font-size: 24px; margin: 6px 0; font-weight: 700; }
+        .banner-text p { font-size: 14px; opacity: 0.9; margin-bottom: 14px; }
+
+        .badge-offer {
+            background: #e52e2e;
+            color: #fff;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 4px;
+            text-transform: uppercase;
+        }
+
+        .btn-banner-shop {
+            background: var(--amz-yellow);
+            color: var(--amz-dark);
+            text-decoration: none;
+            padding: 8px 20px;
+            border-radius: 4px;
+            font-weight: 700;
+            font-size: 13px;
+            display: inline-block;
+        }
+
+        /* =========================================
+           4. PRODUCT GRID (MOBILE / TAB / PC RESPONSIVE)
+           ========================================= */
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 12px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #fff;
+            padding: 12px 16px;
+            border-radius: var(--radius-sm);
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 12px;
+        }
+
+        .section-header h3 { font-size: 16px; font-weight: 700; }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); /* 2 Columns on Mobile */
+            gap: 10px;
+        }
+
+        @media (min-width: 600px) {
+            .product-grid { grid-template-columns: repeat(3, 1fr); gap: 12px; } /* 3 Columns on Tablet */
+        }
+
+        @media (min-width: 992px) {
+            .product-grid { grid-template-columns: repeat(5, 1fr); gap: 14px; } /* 5 Columns on Desktop */
+        }
+
+        .product-card {
+            background: #fff;
+            border-radius: var(--radius-sm);
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-shadow: var(--shadow-sm);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .product-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .product-img-box {
+            width: 100%;
+            height: 140px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .product-img-box img {
+            max-height: 100%;
+            max-width: 100%;
+            object-fit: contain;
+        }
+
+        .product-title {
+            font-size: 13px;
+            font-weight: 500;
+            height: 34px;
+            overflow: hidden;
+            line-height: 1.3;
+            margin-top: 8px;
+        }
+
+        .price-row {
+            display: flex;
+            align-items: baseline;
+            gap: 6px;
+            margin: 6px 0;
+        }
+
+        .curr-price { font-size: 15px; font-weight: 700; }
+        .old-price { font-size: 11px; color: var(--text-secondary); text-decoration: line-through; }
+        .discount-pct { font-size: 11px; color: #388e3c; font-weight: 700; }
+
+        .btn-add-cart {
+            width: 100%;
+            background: var(--amz-btn-yellow);
+            border: 1px solid #a88734;
+            padding: 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .btn-add-cart:hover { background: #f7ca00; }
+
+        /* =========================================
+           5. MOBILE BOTTOM NAVIGATION BAR
+           ========================================= */
+        .mobile-bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #fff;
+            display: flex;
+            justify-content: space-around;
+            padding: 8px 0;
+            border-top: 1px solid var(--amz-border);
+            z-index: 1000;
+        }
+
+        @media (min-width: 769px) {
+            .mobile-bottom-nav { display: none; }
+        }
+
+        .bottom-nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 10px;
+            color: #555;
+            text-decoration: none;
+            background: none;
+            border: none;
+        }
+
+        .bottom-nav-item i { font-size: 18px; margin-bottom: 2px; }
+        .bottom-nav-item.active { color: var(--primary-blue); font-weight: 700; }
+
+        /* =========================================
+           6. AUTHENTICATION MODAL (LOGIN / SIGNUP)
+           ========================================= */
+        .auth-modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.6);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 3000;
+            padding: 16px;
+        }
+
+        .auth-modal-overlay.active { display: flex; }
+
+        .auth-modal-card {
+            background: #fff;
+            width: 100%;
+            max-width: 380px;
+            border-radius: var(--radius-md);
+            padding: 20px;
+            position: relative;
+        }
+
+        .close-modal-btn {
+            position: absolute;
+            top: 10px; right: 10px;
+            background: none; border: none;
+            font-size: 18px; color: #666;
+            cursor: pointer;
+        }
+
+        .auth-header h3 { font-size: 18px; font-weight: 700; }
+        .auth-header p { font-size: 12px; color: #666; margin-top: 2px; }
+
+        .auth-tabs {
+            display: flex;
+            border-bottom: 2px solid var(--amz-border);
+            margin: 14px 0;
+        }
+
+        .auth-tab {
+            flex: 1; padding: 8px;
+            background: none; border: none;
+            font-weight: 600; color: #666;
+            cursor: pointer;
+        }
+
+        .auth-tab.active {
+            color: var(--primary-blue);
+            border-bottom: 2px solid var(--primary-blue);
+            margin-bottom: -2px;
+        }
+
+        .input-group { margin-bottom: 10px; }
+        .input-group label { display: block; font-size: 11px; font-weight: 600; margin-bottom: 4px; }
+        .input-group input {
+            width: 100%; padding: 8px 10px;
+            border: 1px solid var(--amz-border);
+            border-radius: 4px; outline: none; font-size: 13px;
+        }
+
+        .auth-submit-btn {
+            width: 100%;
+            background: var(--amz-btn-yellow);
+            border: 1px solid #a88734;
+            padding: 10px;
+            border-radius: 4px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 6px;
+        }
+
+        .auth-error-msg { color: #d32f2f; font-size: 11px; margin-top: 6px; text-align: center; }
+    </style>
 </head>
 <body>
 
-    <!-- MAIN NAVBAR (AMAZON STYLE DARK HEADER) -->
+    <!-- AMAZON STYLE DARK HEADER -->
     <header class="amz-header">
         <div class="amz-nav-top">
             <!-- Logo -->
@@ -24,7 +506,7 @@
             <!-- Delivery Location -->
             <div class="amz-nav-location">
                 <i class="fa-solid fa-location-dot loc-icon"></i>
-                <div class="loc-text">
+                <div>
                     <span class="loc-line1">Delivering to Delhi 110001</span>
                     <span class="loc-line2">Update location</span>
                 </div>
@@ -42,43 +524,29 @@
                 </button>
             </div>
 
-            <!-- Language Switcher -->
-            <div class="amz-nav-item nav-lang">
-                <span class="flag-icon">🇮🇳</span>
-                <span class="lang-code">EN</span>
-                <i class="fa-solid fa-caret-down"></i>
-            </div>
-
             <!-- Account & Lists Dropdown Trigger -->
-            <div class="amz-nav-item nav-account-dropdown" id="accountDropdownTrigger">
+            <div class="amz-nav-item nav-account-dropdown">
                 <span class="nav-line1" id="navUserGreeting">Hello, sign in</span>
                 <span class="nav-line2">Account & Lists <i class="fa-solid fa-caret-down"></i></span>
 
-                <!-- AMAZON DROPDOWN MENU -->
+                <!-- DROPDOWN MENU -->
                 <div class="amz-account-menu">
                     <div class="menu-sign-section">
                         <button class="btn-amz-signin" onclick="openAuthModal()">Sign in</button>
-                        <p class="new-cust-text">New customer? <a href="#" onclick="openAuthModal(); switchAuthMode('signup');">Start here.</a></p>
+                        <p style="font-size: 11px; margin-top: 6px;">New customer? <a href="#" onclick="openAuthModal(); switchAuthMode('signup');" style="color: var(--text-link);">Start here.</a></p>
                     </div>
                     <div class="menu-columns">
                         <div class="menu-col">
                             <h4>Your Lists</h4>
                             <ul>
                                 <li><a href="#">Create a Wish List</a></li>
-                                <li><a href="#">Wish from Any Website</a></li>
-                                <li><a href="#">Baby Wishlist</a></li>
-                                <li><a href="#">Discover Your Style</a></li>
-                                <li><a href="#">Explore Showroom</a></li>
+                                <li><a href="#">Wishlist Items</a></li>
                             </ul>
                         </div>
                         <div class="menu-col">
                             <h4>Your Account</h4>
                             <ul>
-                                <li><a href="#">Your Account</a></li>
                                 <li><a href="cart.html">Your Orders</a></li>
-                                <li><a href="#">Your Wish List</a></li>
-                                <li><a href="#">Keep shopping for</a></li>
-                                <li><a href="#">Your Recommendations</a></li>
                                 <li><a href="admin-panel.html" id="adminPanelLink" style="display: none;">Admin Panel</a></li>
                                 <li><a href="#" id="logoutBtn" onclick="handleLogout()" style="display: none;">Sign Out</a></li>
                             </ul>
@@ -87,53 +555,54 @@
                 </div>
             </div>
 
-            <!-- Returns & Orders -->
-            <a href="cart.html" class="amz-nav-item nav-orders">
-                <span class="nav-line1">Returns</span>
-                <span class="nav-line2">& Orders</span>
-            </a>
-
             <!-- Cart Icon -->
             <a href="cart.html" class="amz-nav-item nav-cart">
                 <div class="cart-icon-wrapper">
                     <i class="fa-solid fa-cart-shopping"></i>
                     <span class="cart-count" id="cartCount">0</span>
                 </div>
-                <span class="cart-text">Cart</span>
+                <span class="nav-line2" style="margin-left: 6px;">Cart</span>
             </a>
         </div>
 
-        <!-- SUB-NAVIGATION STRIP -->
+        <!-- SUB NAVIGATION STRIP -->
         <nav class="amz-sub-nav">
-            <a href="#" class="sub-nav-item nav-all-btn"><i class="fa-solid fa-bars"></i> All</a>
+            <a href="#" class="sub-nav-item"><i class="fa-solid fa-bars"></i> All</a>
             <a href="#" class="sub-nav-item">Fresh</a>
             <a href="#" class="sub-nav-item">Prime Video</a>
-            <a href="#" class="sub-nav-item">Sell</a>
             <a href="#" class="sub-nav-item">Bestsellers</a>
             <a href="#" class="sub-nav-item">Today's Deals</a>
-            <a href="#" class="sub-nav-item">Customer Service</a>
             <a href="#" class="sub-nav-item">Mobiles</a>
-            <a href="#" class="sub-nav-item active-link">New Releases</a>
-            <a href="#" class="sub-nav-item">Prime</a>
-            <a href="#" class="sub-nav-item">Amazon Pay</a>
             <a href="#" class="sub-nav-item">Electronics</a>
-            <a href="#" class="sub-nav-item">Home & Kitchen</a>
             <a href="#" class="sub-nav-item">Fashion</a>
         </nav>
     </header>
 
-    <!-- MAIN PRODUCT CONTENT -->
-    <main class="main-container">
-        <div class="section-title-bar">
-            <div>
-                <h3>Deals of the Day</h3>
-                <p class="sub-title">Handpicked selections for you</p>
+    <!-- HERO BANNER SLIDER -->
+    <section class="hero-banner-container">
+        <div class="banner-card">
+            <div class="banner-text">
+                <span class="badge-offer">Exclusive Sale</span>
+                <h2>Upgrade Your Electronics</h2>
+                <p>Up to 50% OFF on Top Smart Devices</p>
+                <a href="products.html" class="btn-banner-shop">Shop Now</a>
             </div>
-            <a href="products.html" class="view-all-link">View All <i class="fa-solid fa-chevron-right"></i></a>
+        </div>
+    </section>
+
+    <!-- MAIN PRODUCT GRID SECTION -->
+    <main class="main-container">
+        <div class="section-header">
+            <h3>Trending Deals & Offers</h3>
+            <a href="products.html" style="color: var(--primary-blue); text-decoration: none; font-size: 13px; font-weight: 700;">View All</a>
         </div>
 
+        <!-- PRODUCT GRID -->
         <div class="product-grid" id="productGrid">
-            <div class="loading-spinner"><i class="fa-solid fa-circle-notch fa-spin"></i> Loading Products...</div>
+            <!-- Dynamic JavaScript Content -->
+            <div style="grid-column: 1 / -1; text-align: center; padding: 20px;">
+                <i class="fa-solid fa-circle-notch fa-spin"></i> Loading Products...
+            </div>
         </div>
     </main>
 
@@ -148,30 +617,32 @@
             <span>Categories</span>
         </a>
         <a href="cart.html" class="bottom-nav-item">
-            <div class="cart-icon-wrapper">
+            <div style="position: relative;">
                 <i class="fa-solid fa-cart-shopping"></i>
-                <span class="cart-badge" id="mobileCartCount">0</span>
+                <span class="cart-count" id="mobileCartCount" style="top: -6px; right: -8px; left: auto;">0</span>
             </div>
             <span>Cart</span>
         </a>
-        <button class="bottom-nav-item btn-reset" onclick="handleMobileProfileClick()">
-            <i class="fa-regular fa-user" id="mobileUserIcon"></i>
-            <span id="mobileUserLabel">Account</span>
+        <button class="bottom-nav-item" onclick="openAuthModal()">
+            <i class="fa-regular fa-user"></i>
+            <span>Account</span>
         </button>
     </div>
 
-    <!-- AUTH MODAL -->
+    <!-- AUTHENTICATION MODAL -->
     <div class="auth-modal-overlay" id="authModal">
         <div class="auth-modal-card">
             <button class="close-modal-btn" onclick="closeAuthModal()"><i class="fa-solid fa-xmark"></i></button>
             <div class="auth-header">
                 <h3 id="authTitle">Welcome Back</h3>
-                <p id="authSubtitle">Log in to manage orders & profile</p>
+                <p id="authSubtitle">Sign in to access your orders & account</p>
             </div>
+
             <div class="auth-tabs">
                 <button class="auth-tab active" id="loginTabBtn" onclick="switchAuthMode('login')">Login</button>
                 <button class="auth-tab" id="signupTabBtn" onclick="switchAuthMode('signup')">Sign Up</button>
             </div>
+
             <form id="authForm" onsubmit="handleAuthSubmit(event)">
                 <div class="input-group" id="nameGroup" style="display: none;">
                     <label>Full Name</label>
@@ -191,7 +662,133 @@
         </div>
     </div>
 
-    <script type="module" src="firebase-config.js"></script>
-    <script type="module" src="app.js"></script>
+    <!-- FIREBASE MODULES & LOGIC -->
+    <script type="module">
+        import { auth, db } from "./firebase-config.js";
+        import { 
+            signInWithEmailAndPassword, 
+            createUserWithEmailAndPassword, 
+            signOut, 
+            onAuthStateChanged 
+        } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { 
+            doc, 
+            setDoc, 
+            getDoc, 
+            collection, 
+            getDocs 
+        } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        let currentAuthMode = "login";
+
+        // Global Modal Handles
+        window.openAuthModal = () => document.getElementById("authModal").classList.add("active");
+        window.closeAuthModal = () => document.getElementById("authModal").classList.remove("active");
+
+        window.switchAuthMode = (mode) => {
+            currentAuthMode = mode;
+            const isSignup = mode === "signup";
+            document.getElementById("loginTabBtn").classList.toggle("active", !isSignup);
+            document.getElementById("signupTabBtn").classList.toggle("active", isSignup);
+            document.getElementById("nameGroup").style.display = isSignup ? "block" : "none";
+            document.getElementById("authTitle").innerText = isSignup ? "Create Account" : "Welcome Back";
+            document.getElementById("authSubmitBtn").querySelector("span").innerText = isSignup ? "Sign Up" : "Log In";
+        };
+
+        window.handleAuthSubmit = async (e) => {
+            e.preventDefault();
+            const email = document.getElementById("authEmail").value;
+            const password = document.getElementById("authPassword").value;
+            const name = document.getElementById("authName").value;
+            const errorEl = document.getElementById("authError");
+            errorEl.innerText = "";
+
+            try {
+                if (currentAuthMode === "signup") {
+                    const userCred = await createUserWithEmailAndPassword(auth, email, password);
+                    await setDoc(doc(db, "users", userCred.user.uid), {
+                        name: name || "User",
+                        email: email,
+                        role: "customer",
+                        createdAt: new Date().toISOString()
+                    });
+                } else {
+                    await signInWithEmailAndPassword(auth, email, password);
+                }
+                closeAuthModal();
+            } catch (err) {
+                errorEl.innerText = err.message.replace("Firebase: ", "");
+            }
+        };
+
+        window.handleLogout = () => signOut(auth);
+
+        // Auth Observer
+        onAuthStateChanged(auth, async (user) => {
+            const navGreeting = document.getElementById("navUserGreeting");
+            const logoutBtn = document.getElementById("logoutBtn");
+            const adminPanelLink = document.getElementById("adminPanelLink");
+
+            if (user) {
+                try {
+                    const userDoc = await getDoc(doc(db, "users", user.uid));
+                    if (userDoc.exists()) {
+                        const data = userDoc.data();
+                        navGreeting.innerText = `Hello, ${data.name.split(" ")[0]}`;
+                        if (data.role === "admin") adminPanelLink.style.display = "block";
+                    }
+                } catch (e) {
+                    navGreeting.innerText = "Hello, User";
+                }
+                logoutBtn.style.display = "block";
+            } else {
+                navGreeting.innerText = "Hello, sign in";
+                logoutBtn.style.display = "none";
+                adminPanelLink.style.display = "none";
+            }
+        });
+
+        // Load Dynamic Products
+        async function loadProducts() {
+            const productGrid = document.getElementById("productGrid");
+            try {
+                const querySnapshot = await getDocs(collection(db, "products"));
+                if (querySnapshot.empty) {
+                    // Fallback Dummy Data
+                    productGrid.innerHTML = `
+                        <div class="product-card">
+                            <div class="product-img-box"><img src="https://via.placeholder.com/150" alt="Product"></div>
+                            <div class="product-title">Sample Smartphone 5G</div>
+                            <div class="price-row">
+                                <span class="curr-price">₹12,999</span>
+                                <span class="old-price">₹15,999</span>
+                                <span class="discount-pct">18% off</span>
+                            </div>
+                            <button class="btn-add-cart">Add to Cart</button>
+                        </div>
+                    `;
+                    return;
+                }
+                productGrid.innerHTML = "";
+                querySnapshot.forEach((doc) => {
+                    const p = doc.data();
+                    productGrid.innerHTML += `
+                        <div class="product-card">
+                            <div class="product-img-box"><img src="${p.imageUrl || 'https://via.placeholder.com/150'}" alt="${p.title}"></div>
+                            <div class="product-title">${p.title}</div>
+                            <div class="price-row">
+                                <span class="curr-price">₹${p.price}</span>
+                            </div>
+                            <button class="btn-add-cart">Add to Cart</button>
+                        </div>
+                    `;
+                });
+            } catch (e) {
+                productGrid.innerHTML = "<p style='grid-column: 1/-1;'>Unable to load products.</p>";
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", loadProducts);
+    </script>
 </body>
 </html>
